@@ -1,5 +1,4 @@
 import React, { useState, useRef } from "react";
-import { FaLinkedinIn, FaGithub, FaInstagram } from "react-icons/fa"; // Import social icons
 import emailjs from "@emailjs/browser"; // Import emailjs
 
 const Contact = () => {
@@ -7,6 +6,9 @@ const Contact = () => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [statusMessage, setStatusMessage] = useState("");
+  const [nameError, setNameError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [messageError, setMessageError] = useState("");
   const form = useRef();
 
   // Replace with your actual EmailJS service ID, template ID, and public key
@@ -14,8 +16,46 @@ const Contact = () => {
   const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
   const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
+  const validateEmail = (email) => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    setStatusMessage(""); // Clear previous status messages
+    setNameError(""); // Clear previous errors
+    setEmailError("");
+    setMessageError("");
+
+    let isValid = true;
+
+    if (!name.trim()) {
+      setNameError("Name is required.");
+      isValid = false;
+    }
+
+    if (!email.trim()) {
+      setEmailError("Email is required.");
+      isValid = false;
+    } else if (!validateEmail(email)) {
+      setEmailError("Invalid email format.");
+      isValid = false;
+    }
+
+    if (!message.trim()) {
+      setMessageError("Message is required.");
+      isValid = false;
+    }
+
+    if (!isValid) {
+      setStatusMessage("Please correct the errors.");
+      return;
+    }
+
     setStatusMessage("Sending...");
 
     emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, form.current, PUBLIC_KEY).then(
@@ -36,97 +76,89 @@ const Contact = () => {
   return (
     <section
       id="contact"
-      className="py-20 min-h-[50vh] bg-gray-200 text-gray-900 dark:bg-gray-800 dark:text-white"
+      className="py-20 min-h-[70vh] bg-gray-900 text-white relative overflow-hidden flex items-center justify-center rounded-3xl"
     >
-      <div className="container mx-auto px-6">
-        <h2 className="text-4xl font-bold text-center mb-12">Contact Me</h2>
-        <div className="flex flex-col md:flex-row">
-          <div className="md:w-1/2 md:pr-10">
-            <form ref={form} onSubmit={handleSubmit}>
-              <div className="mb-4">
-                <label htmlFor="name" className="block text-lg mb-2">
-                  Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="from_name" // Updated to match EmailJS template variable
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full p-3 rounded-md bg-gray-100 dark:bg-gray-700 border border-gray-400 dark:border-gray-600 focus:outline-none focus:border-blue-500"
-                />
-              </div>
-              <div className="mb-4">
-                <label htmlFor="email" className="block text-lg mb-2">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="from_email" // Updated to match EmailJS template variable
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full p-3 rounded-md bg-gray-100 dark:bg-gray-700 border border-gray-400 dark:border-gray-600 focus:outline-none focus:border-blue-500"
-                />
-              </div>
-              <div className="mb-4">
-                <label htmlFor="message" className="block text-lg mb-2">
-                  Message
-                </label>
-                <textarea
-                  id="message"
-                  name="message" // Important for EmailJS
-                  rows="5"
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  className="w-full p-3 rounded-md bg-gray-100 dark:bg-gray-700 border border-gray-400 dark:border-gray-600 focus:outline-none focus:border-blue-500"
-                ></textarea>
-              </div>
-              {statusMessage && (
-                <p className="text-center text-lg mb-4">{statusMessage}</p>
-              )}
-              <button
-                type="submit"
-                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full transition duration-300 block mx-auto"
-              >
-                Send Message
-              </button>
-            </form>
-          </div>
-          <div className="md:w-1/2 mt-12 md:mt-0 md:pl-10 text-center md:text-left">
-            <h3 className="text-2xl font-semibold mb-4">Contact Details</h3>
-            <p className="text-lg mb-2">Email: sujalmangar304@gmail.com</p>
-            <p className="text-lg mb-2">Phone: +91 9339271036</p>
-            <p className="text-lg mb-6">Location: Kalimpong, West Bengal</p>
-            <h3 className="text-2xl font-semibold mb-4">Social Links</h3>
-            {/* New social icons */}
-            <div className="flex justify-center md:justify-start space-x-4 mt-4">
-              <a
-                href="https://linkedin.com/in/yourprofile"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="transition duration-300"
-              >
-                <FaLinkedinIn className="text-2xl text-blue-600 hover:text-blue-400" />
-              </a>
-              <a
-                href="https://github.com/yourprofile"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="transition duration-300"
-              >
-                <FaGithub className="text-2xl text-gray-300 hover:text-white" />
-              </a>
-              <a
-                href="https://instagram.com/yourprofile"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="transition duration-300"
-              >
-                <FaInstagram className="text-2xl text-pink-500 hover:text-pink-300" />
-              </a>
-            </div>
-          </div>
+      {/* Decorative Shape 1 */}
+      <div className="absolute top-0 left-0 w-64 h-64 rounded-full bg-blue-500 opacity-20 transform -translate-x-1/2 -translate-y-1/2 filter blur-3xl"></div>
+      {/* Decorative Shape 2 */}
+      <div className="absolute bottom-0 right-0 w-64 h-64 rounded-full bg-pink-500 opacity-20 transform translate-x-1/2 translate-y-1/2 filter blur-3xl"></div>
+
+      <div className="container mx-auto px-6 z-10 flex flex-col md:flex-row items-center justify-center">
+        {/* Left side: Message text */}
+        <div className="md:w-1/2 md:pr-8 mb-10 md:mb-0">
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600 text-center md:text-left">
+            Let's connect and create something new
+          </h2>
+        </div>
+
+        {/* Right side: Contact Form */}
+        <div className="md:w-1/2 md:pl-8">
+          <form ref={form} onSubmit={handleSubmit} className="p-6 bg-gray-800 rounded-lg shadow-xl">
+            <div className="mb-4">
+                              <label
+                                htmlFor="name"
+                                className="block text-lg mb-2 text-white"
+                              >
+                                Name
+                              </label>
+                              <input
+                                type="text"
+                                id="name"
+                                name="from_name"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                className={`w-full p-3 rounded-md bg-gray-700 border ${nameError ? 'border-red-500' : 'border-gray-400'} focus:outline-none focus:border-blue-500 text-white`}
+                                required
+                              />
+                              {nameError && <p className="text-red-500 text-sm mt-1">{nameError}</p>}
+                            </div>
+                            <div className="mb-4">
+                              <label
+                                htmlFor="email"
+                                className="block text-lg mb-2 text-white"
+                              >
+                                Email
+                              </label>
+                              <input
+                                type="email"
+                                id="email"
+                                name="from_email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className={`w-full p-3 rounded-md bg-gray-700 border ${emailError ? 'border-red-500' : 'border-gray-400'} focus:outline-none focus:border-blue-500 text-white`}
+                                required
+                              />
+                              {emailError && <p className="text-red-500 text-sm mt-1">{emailError}</p>}
+                            </div>
+                            <div className="mb-4">
+                              <label
+                                htmlFor="message"
+                                className="block text-lg mb-2 text-white"
+                              >
+                                Message
+                              </label>
+                              <textarea
+                                id="message"
+                                name="message"
+                                rows="5"
+                                value={message}
+                                onChange={(e) => setMessage(e.target.value)}
+                                className={`w-full p-3 rounded-md bg-gray-700 border ${messageError ? 'border-red-500' : 'border-gray-400'} focus:outline-none focus:border-blue-500 text-white`}
+                                required
+                              ></textarea>
+                              {messageError && <p className="text-red-500 text-sm mt-1">{messageError}</p>}
+                            </div>
+                            {statusMessage && (
+                              <p className={`text-center text-lg mb-4 ${statusMessage.includes('Failed') ? 'text-red-500' : 'text-green-500'} text-white`}>
+                                {statusMessage}
+                              </p>
+                            )}
+                            <button
+                              type="submit"
+                              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full transition duration-300 block mx-auto"
+                            >
+                              Send Message
+                            </button>          </form>
         </div>
       </div>
     </section>

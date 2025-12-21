@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { FaSun, FaMoon } from "react-icons/fa"; // Import sun and moon icons
-import { useTheme } from "../../src/context/ThemeContext"; // Import useTheme hook
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeLink, setActiveLink] = useState("home");
-  const { theme, toggleTheme } = useTheme(); // Use the theme context
 
   const navLinks = [
     { id: "home", title: "Home" },
@@ -13,8 +10,7 @@ const Navbar = () => {
     { id: "skills", title: "Skills" },
     { id: "projects", title: "Projects" },
     { id: "education", title: "Education" },
-    { id: "certifications", title: "Certifications" },
-    { id: "achievements", title: "Achievements" },
+
     { id: "contact", title: "Contact" },
   ];
 
@@ -44,12 +40,9 @@ const Navbar = () => {
   }, [navLinks]);
 
   return (
-    <nav className="bg-gray-900 text-white dark:bg-gray-800 fixed w-full z-50 top-0 shadow-md">
+    <nav className="bg-gray-800 text-white fixed w-full z-50 top-0 shadow-md">
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
         <div className="flex items-center space-x-4"> {/* Container for toggle and logo */}
-          <button onClick={toggleTheme} className="focus:outline-none text-2xl">
-            {theme === 'dark' ? <FaSun className="text-yellow-400" /> : <FaMoon className="text-gray-400" />}
-          </button>
           <div className="text-2xl font-bold">
             <a href="#home">Sujal Thapa</a>
           </div>
@@ -90,13 +83,13 @@ const Navbar = () => {
         </div>
       </div>
       {isOpen && (
-        <div className="md:hidden bg-gray-800 dark:bg-gray-700">
+        <div className="md:hidden bg-gray-800">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             {navLinks.map((link) => (
               <a
                 key={link.id}
                 href={`#${link.id}`}
-                className={`block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700 dark:hover:bg-gray-600 ${
+                className={`block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700 ${
                   activeLink === link.id ? "text-blue-400" : ""
                 }`}
                 onClick={() => setIsOpen(false)}

@@ -1,49 +1,56 @@
-import React from 'react';
+import React from "react";
+import ProjectCard from "../components/ProjectCard"; // Import the ProjectCard component
 
-const projects = [
+// Dummy Project Data (will need image updates in ProjectCard)
+const projectsData = [
   {
-    title: 'Project One',
-    description: 'A brief description of the project, its purpose, and the value it brings.',
-    tech: ['React', 'Tailwind CSS', 'Node.js'],
-    github: '#',
-    live: '#',
+    title: "MSu Shuttle Service",
+    description:
+      "A smart inter-campus transportation management system for faculty, admins, and drivers.",
+    liveLink: "",
+    githubLink: "https://github.com/orgs/MSU-Shuttle-Service/repositories",
+    image: "../../public/images/msu shuttle.jpeg",
+    status: "in-progress",
   },
   {
-    title: 'Project Two',
-    description: 'A brief description of the project, its purpose, and the value it brings.',
-    tech: ['React', 'Express', 'MongoDB'],
-    github: '#',
-    live: '#',
+    title: "MSU CSE Website",
+    description:
+      "Official website for the CSE Department, MSU, detailing academics, faculty, and research.",
+    liveLink: "",
+    githubLink: "https://github.com/msu-scse/scse-website",
+    image: "../../public/images/cse website.jpeg",
+    status: "in-progress",
   },
   {
-    title: 'Project Three',
-    description: 'A brief description of the project, its purpose, and the value it brings.',
-    tech: ['HTML', 'CSS', 'JavaScript'],
-    github: '#',
-    live: '#',
+    title: "Gradient Color Maker",
+    description:
+      "A simple gradient color maker showcasing my projects, skills, and experience with modern web tech.",
+    liveLink: "#",
+    githubLink:
+      "https://github.com/Sujal-Thapa1/React-Projects/tree/main/Gradient%20Color%20Maker/GradientColorMaker",
+    image: "../../public/images/gradient.png",
+    status: "finished",
   },
 ];
 
 const Projects = () => {
   return (
-    <section id="projects" className="py-20 bg-gray-200 text-gray-900 dark:bg-gray-800 dark:text-white">
-      <div className="container mx-auto px-6">
-        <h2 className="text-4xl font-bold text-center mb-12">Projects</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map(project => (
-            <div key={project.title} className="bg-gray-300 dark:bg-gray-700 p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300">
-              <h3 className="text-2xl font-semibold mb-2">{project.title}</h3>
-              <p className="mb-4">{project.description}</p>
-              <div className="flex flex-wrap mb-4">
-                {project.tech.map(tech => (
-                  <span key={tech} className="bg-gray-400 dark:bg-gray-600 text-xs font-semibold mr-2 mb-2 px-2.5 py-0.5 rounded-full">{tech}</span>
-                ))}
-              </div>
-              <div className="flex justify-between">
-                <a href={project.github} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">GitHub</a>
-                <a href={project.live} target="_blank" rel="noopener noreferrer" className="text-green-400 hover:underline">Live Demo</a>
-              </div>
-            </div>
+    <section
+      id="projects"
+      className="py-20 bg-gray-900 text-white"
+    >
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-center mb-12 text-white">
+          Projects
+        </h2>
+        <p className="text-lg text-gray-300 text-center max-w-2xl mx-auto mb-16">
+          Explore a selection of real-world projects, demonstrating diverse
+          technologies and problem-solving approaches.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {projectsData.map((project, index) => (
+            <ProjectCard key={index} project={project} />
           ))}
         </div>
       </div>

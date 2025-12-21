@@ -7,6 +7,10 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        serif: ['Georgia', 'serif'], // Example: You can replace 'Georgia' with a custom serif font if imported
+        // sans: ['Roboto', 'sans-serif'], // Example if you want to explicitly define sans
+      },
       animation: {
         blob: 'blob 4s infinite',
         'pulse-slow': 'pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
