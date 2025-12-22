@@ -1,5 +1,7 @@
 import React from "react";
 import { FaLinkedinIn, FaGithub, FaInstagram } from "react-icons/fa";
+import profile from "/public/images/profile.png";
+import resume from "/public/sujal-cv.pdf";
 
 const Hero = () => {
   return (
@@ -25,7 +27,7 @@ const Hero = () => {
               View Projects
             </a>
             <a
-              href="/sujal-cv.pdf"
+              href={resume}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-gray-700 hover:bg-gray-800 text-white dark:bg-gray-800 dark:hover:bg-gray-700 font-bold py-2 px-4 sm:py-3 sm:px-6 rounded-full transition duration-300"
@@ -69,7 +71,7 @@ const Hero = () => {
           <div className="absolute rounded-full bg-pink-500 opacity-80 w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 bottom-1 right-1 sm:bottom-2 sm:right-2 md:bottom-4 md:right-4 transform animate-pulse-slow animation-delay-2000"></div>
           <div className="relative z-10 flex flex-col items-center">
             <img
-              src="/images/profile.png"
+              src={profile}
               alt="Profile"
               className="w-48 h-60 sm:w-64 sm:h-80 md:w-[400px] md:h-[480px] rounded-full shadow-2xl object-contain"
             />

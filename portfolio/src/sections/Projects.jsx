@@ -1,5 +1,8 @@
 import React from "react";
 import ProjectCard from "../components/ProjectCard"; // Import the ProjectCard component
+import cse from "/public/images/cse-website.jpeg";
+import msu from "/public/images/msu-shuttle.jpeg";
+import gradient from "/public/images/gradient-maker.png";
 
 // Dummy Project Data (will need image updates in ProjectCard)
 const projectsData = [
@@ -9,7 +12,7 @@ const projectsData = [
       "A smart inter-campus transportation management system for faculty, admins, and drivers.",
     liveLink: "",
     githubLink: "https://github.com/orgs/MSU-Shuttle-Service/repositories",
-    image: "/images/msu-shuttle.jpeg",
+    image: { msu },
     status: "in-progress",
   },
   {
@@ -18,7 +21,7 @@ const projectsData = [
       "Official website for the CSE Department, MSU, detailing academics, faculty, and research.",
     liveLink: "",
     githubLink: "https://github.com/msu-scse/scse-website",
-    image: "/images/cse-website.jpeg",
+    image: { cse },
     status: "in-progress",
   },
   {
@@ -28,7 +31,7 @@ const projectsData = [
     liveLink: "#",
     githubLink:
       "https://github.Ccom/Sujal-Thapa1/React-Projects/tree/main/Gradient%20Color%20Maker/GradientColorMaker",
-    image: "/images/gradient-maker.png",
+    image: { gradient },
   },
 ];
 

@@ -45,7 +45,9 @@ const Education = () => {
               {/* Content Block */}
               <div
                 className={`w-full md:w-1/2 p-4 ${
-                  index % 2 === 0 ? "md:order-1 md:text-right md:pr-8" : "md:order-3 md:text-left md:pl-4"
+                  index % 2 === 0
+                    ? "md:order-1 md:text-right md:pr-8"
+                    : "md:order-3 md:text-left md:pl-4"
                 } text-left pl-16`} // Mobile: pl-16 for dot, Desktop: p-4 (overwritten by md:pr-8 or md:pl-4)
               >
                 <h3 className="text-xl sm:text-2xl md:text-3xl font-semibold mb-2 text-white">
