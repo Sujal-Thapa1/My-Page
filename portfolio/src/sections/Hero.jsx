@@ -25,7 +25,7 @@ const Hero = () => {
               View Projects
             </a>
             <a
-              href="/Sujal CV.pdf"
+              href="/sujal-cv.pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="bg-gray-700 hover:bg-gray-800 text-white dark:bg-gray-800 dark:hover:bg-gray-700 font-bold py-2 px-4 sm:py-3 sm:px-6 rounded-full transition duration-300"
