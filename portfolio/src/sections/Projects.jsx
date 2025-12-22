@@ -28,7 +28,8 @@ const projectsData = [
     liveLink: "#",
     githubLink:
       "https://github.Ccom/Sujal-Thapa1/React-Projects/tree/main/Gradient%20Color%20Maker/GradientColorMaker",
-    image: "/images/gradient-maker.png",,
+    image: "/images/gradient-maker.png",
+  },
 ];
 
 const Projects = () => {
