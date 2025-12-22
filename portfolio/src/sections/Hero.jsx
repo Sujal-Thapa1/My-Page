@@ -37,7 +37,7 @@ const Hero = () => {
           </div>
           <div className="flex justify-center md:justify-start space-x-4 mt-6">
             <a
-              href="https://linkedin.com/in/yourprofile"
+              href="https://t.ly/GlHbn"
               target="_blank"
               rel="noopener noreferrer"
               className="transition duration-300"
@@ -45,7 +45,7 @@ const Hero = () => {
               <FaLinkedinIn className="text-2xl text-blue-600 hover:text-blue-400" />
             </a>
             <a
-              href="https://github.com/yourprofile"
+              href="https://github.com/Sujal-Thapa1"
               target="_blank"
               rel="noopener noreferrer"
               className="transition duration-300"
@@ -53,7 +53,7 @@ const Hero = () => {
               <FaGithub className="text-2xl text-gray-300 hover:text-white" />
             </a>
             <a
-              href="https://instagram.com/yourprofile"
+              href="https://www.instagram.com/be_uni.que__/profilecard/?igsh=bmVjN2p3eG9yN210"
               target="_blank"
               rel="noopener noreferrer"
               className="transition duration-300"

@@ -10,9 +10,7 @@ const Footer = () => {
           {/* Sujal Thapa Text */}
           <div className="text-center md:text-left mb-8 md:mb-0">
             <h2 className="text-5xl md:text-7xl font-extrabold font-serif leading-none  ">
-              <span className=" text-orange-600">
-                Sujal
-              </span>
+              <span className=" text-orange-600">Sujal</span>
               <br />
               Thapa
             </h2>
