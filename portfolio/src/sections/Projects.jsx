@@ -9,7 +9,7 @@ const projectsData = [
       "A smart inter-campus transportation management system for faculty, admins, and drivers.",
     liveLink: "",
     githubLink: "https://github.com/orgs/MSU-Shuttle-Service/repositories",
-    image: "../../public/images/msu shuttle.jpeg",
+    image: "/images/msu shuttle.jpeg",
     status: "in-progress",
   },
   {
@@ -18,7 +18,7 @@ const projectsData = [
       "Official website for the CSE Department, MSU, detailing academics, faculty, and research.",
     liveLink: "",
     githubLink: "https://github.com/msu-scse/scse-website",
-    image: "../../public/images/cse website.jpeg",
+    image: "/images/cse website.jpeg",
     status: "in-progress",
   },
   {
@@ -28,7 +28,7 @@ const projectsData = [
     liveLink: "#",
     githubLink:
       "https://github.com/Sujal-Thapa1/React-Projects/tree/main/Gradient%20Color%20Maker/GradientColorMaker",
-    image: "../../public/images/gradient.png",
+    image: "/images/gradient.png",
     status: "finished",
   },
 ];

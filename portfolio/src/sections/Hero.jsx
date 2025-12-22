@@ -69,7 +69,7 @@ const Hero = () => {
           <div className="absolute rounded-full bg-pink-500 opacity-80 w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 bottom-1 right-1 sm:bottom-2 sm:right-2 md:bottom-4 md:right-4 transform animate-pulse-slow animation-delay-2000"></div>
           <div className="relative z-10 flex flex-col items-center">
             <img
-              src="../public/images/profile.png"
+              src="/images/profile.png"
               alt="Profile"
               className="w-48 h-60 sm:w-64 sm:h-80 md:w-[400px] md:h-[480px] rounded-full shadow-2xl object-contain"
             />

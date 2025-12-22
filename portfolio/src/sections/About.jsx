@@ -21,7 +21,7 @@ const About = () => {
         <div className="flex flex-col md:flex-row items-center">
           <div className="md:w-1/3 mb-8 md:mb-0 flex justify-center">
             <img
-              src="/portfolio/public/images/about.jpeg"
+              src="/images/about.jpeg"
               alt="Profile"
               className="rounded-full w-64 h-64 object-cover shadow-lg md:w-96 md:h-80 md:rounded-none" // Rounded on mobile, no rounding on desktop
               style={
