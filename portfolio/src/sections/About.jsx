@@ -8,24 +8,30 @@ const About = () => {
       setIsDesktop(window.innerWidth >= 768); // Tailwind's 'md' breakpoint
     };
     handleResize(); // Set initial value
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return (
-    <section
-      id="about"
-      className="py-40 bg-gray-900 text-white rounded-3xl"
-    >
+    <section id="about" className="py-40 bg-gray-900 text-white rounded-3xl">
       <div className="container mx-auto px-6">
-                <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-center mb-16 text-orange-400">About <span className="text-white">Me</span></h2>
+        <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-center mb-16 text-orange-400">
+          About <span className="text-white">Me</span>
+        </h2>
         <div className="flex flex-col md:flex-row items-center">
           <div className="md:w-1/3 mb-8 md:mb-0 flex justify-center">
             <img
-              src="../../public/images/about.jpeg"
+              src="/portfolio/public/images/about.jpeg"
               alt="Profile"
               className="rounded-full w-64 h-64 object-cover shadow-lg md:w-96 md:h-80 md:rounded-none" // Rounded on mobile, no rounding on desktop
-              style={isDesktop ? { clipPath: 'polygon(0% 0%, 100% 0%, 100% 90%, 90% 100%, 0% 100%)' } : {}} // Apply clip-path conditionally
+              style={
+                isDesktop
+                  ? {
+                      clipPath:
+                        "polygon(0% 0%, 100% 0%, 100% 90%, 90% 100%, 0% 100%)",
+                    }
+                  : {}
+              } // Apply clip-path conditionally
             />
           </div>
           <div className="md:w-2/3 md:pl-12 text-center md:text-left">
