@@ -14,6 +14,9 @@ const Contact = () => {
   // Replace with your actual EmailJS service ID, template ID, and public key
   const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
   const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+  const AUTO_REPLY_TEMPLATE_ID = import.meta.env
+    .VITE_EMAILJS_AUTO_REPLY_TEMPLATE_ID;
+
   const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
   const validateEmail = (email) => {
@@ -59,15 +62,41 @@ const Contact = () => {
     setStatusMessage("Sending...");
 
     emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, form.current, PUBLIC_KEY).then(
-      (result) => {
-        console.log(result.text);
+      async (result) => {
+        console.log("Main message sent:", result.text);
         setStatusMessage("Message sent successfully!");
+
+        // Send auto-reply
+        try {
+          if (AUTO_REPLY_TEMPLATE_ID) {
+            const autoReplyParams = {
+              email: email, // Changed to match the {{email}} placeholder in the template
+              to_name: name,
+              // You can add other parameters here if your auto-reply template needs them
+            };
+            const autoReplyResult = await emailjs.send(
+              SERVICE_ID,
+              AUTO_REPLY_TEMPLATE_ID,
+              autoReplyParams,
+              PUBLIC_KEY
+            );
+            console.log("Auto-reply sent:", autoReplyResult.text);
+          } else {
+            console.warn(
+              "AUTO_REPLY_TEMPLATE_ID is not defined. Auto-reply skipped."
+            );
+          }
+        } catch (autoReplyError) {
+          console.error("Failed to send auto-reply:", autoReplyError);
+          // Do not change statusMessage for the user, as the main message was sent.
+        }
+
         setName("");
         setEmail("");
         setMessage("");
       },
       (error) => {
-        console.log(error.text);
+        console.log("Failed to send main message:", error.text);
         setStatusMessage("Failed to send message. Please try again later.");
       }
     );
@@ -93,72 +122,89 @@ const Contact = () => {
 
         {/* Right side: Contact Form */}
         <div className="md:w-1/2 md:pl-8">
-          <form ref={form} onSubmit={handleSubmit} className="p-6 bg-gray-800 rounded-lg shadow-xl">
+          <form
+            ref={form}
+            onSubmit={handleSubmit}
+            className="p-6 bg-gray-800 rounded-lg shadow-xl"
+          >
             <div className="mb-4">
-                              <label
-                                htmlFor="name"
-                                className="block text-lg mb-2 text-white"
-                              >
-                                Name
-                              </label>
-                              <input
-                                type="text"
-                                id="name"
-                                name="from_name"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                className={`w-full p-3 rounded-md bg-gray-700 border ${nameError ? 'border-red-500' : 'border-gray-400'} focus:outline-none focus:border-blue-500 text-white`}
-                                required
-                              />
-                              {nameError && <p className="text-red-500 text-sm mt-1">{nameError}</p>}
-                            </div>
-                            <div className="mb-4">
-                              <label
-                                htmlFor="email"
-                                className="block text-lg mb-2 text-white"
-                              >
-                                Email
-                              </label>
-                              <input
-                                type="email"
-                                id="email"
-                                name="from_email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                className={`w-full p-3 rounded-md bg-gray-700 border ${emailError ? 'border-red-500' : 'border-gray-400'} focus:outline-none focus:border-blue-500 text-white`}
-                                required
-                              />
-                              {emailError && <p className="text-red-500 text-sm mt-1">{emailError}</p>}
-                            </div>
-                            <div className="mb-4">
-                              <label
-                                htmlFor="message"
-                                className="block text-lg mb-2 text-white"
-                              >
-                                Message
-                              </label>
-                              <textarea
-                                id="message"
-                                name="message"
-                                rows="5"
-                                value={message}
-                                onChange={(e) => setMessage(e.target.value)}
-                                className={`w-full p-3 rounded-md bg-gray-700 border ${messageError ? 'border-red-500' : 'border-gray-400'} focus:outline-none focus:border-blue-500 text-white`}
-                                required
-                              ></textarea>
-                              {messageError && <p className="text-red-500 text-sm mt-1">{messageError}</p>}
-                            </div>
-                            {statusMessage && (
-                              <p className={`text-center text-lg mb-4 ${statusMessage.includes('Failed') ? 'text-red-500' : 'text-green-500'} text-white`}>
-                                {statusMessage}
-                              </p>
-                            )}
-                            <button
-                              type="submit"
-                              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full transition duration-300 block mx-auto"
-                            >
-                              Send Message
-                            </button>          </form>
+              <label htmlFor="name" className="block text-lg mb-2 text-white">
+                Name
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="from_name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className={`w-full p-3 rounded-md bg-gray-700 border ${
+                  nameError ? "border-red-500" : "border-gray-400"
+                } focus:outline-none focus:border-blue-500 text-white`}
+                required
+              />
+              {nameError && (
+                <p className="text-red-500 text-sm mt-1">{nameError}</p>
+              )}
+            </div>
+            <div className="mb-4">
+              <label htmlFor="email" className="block text-lg mb-2 text-white">
+                Email
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="from_email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value.trim())}
+                className={`w-full p-3 rounded-md bg-gray-700 border ${
+                  emailError ? "border-red-500" : "border-gray-400"
+                } focus:outline-none focus:border-blue-500 text-white`}
+                required
+              />
+              {emailError && (
+                <p className="text-red-500 text-sm mt-1">{emailError}</p>
+              )}
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="message"
+                className="block text-lg mb-2 text-white"
+              >
+                Message
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                rows="5"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                className={`w-full p-3 rounded-md bg-gray-700 border ${
+                  messageError ? "border-red-500" : "border-gray-400"
+                } focus:outline-none focus:border-blue-500 text-white`}
+                required
+              ></textarea>
+              {messageError && (
+                <p className="text-red-500 text-sm mt-1">{messageError}</p>
+              )}
+            </div>
+            {statusMessage && (
+              <p
+                className={`text-center text-lg mb-4 ${
+                  statusMessage.includes("Failed")
+                    ? "text-red-500"
+                    : "text-green-500"
+                } text-white`}
+              >
+                {statusMessage}
+              </p>
+            )}
+            <button
+              type="submit"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full transition duration-300 block mx-auto"
+            >
+              Send Message
+            </button>{" "}
+          </form>
         </div>
       </div>
     </section>

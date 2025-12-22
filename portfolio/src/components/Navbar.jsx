@@ -1,18 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeLink, setActiveLink] = useState("home");
 
-  const navLinks = [
-    { id: "home", title: "Home" },
-    { id: "about", title: "About" },
-    { id: "skills", title: "Skills" },
-    { id: "projects", title: "Projects" },
-    { id: "education", title: "Education" },
+  const navLinks = useMemo(
+    () => [
+      { id: "home", title: "Home" },
+      { id: "about", title: "About" },
+      { id: "skills", title: "Skills" },
+      { id: "projects", title: "Projects" },
+      { id: "education", title: "Education" },
 
-    { id: "contact", title: "Contact" },
-  ];
+      { id: "contact", title: "Contact" },
+    ],
+    []
+  );
 
   useEffect(() => {
     const handleScroll = () => {
