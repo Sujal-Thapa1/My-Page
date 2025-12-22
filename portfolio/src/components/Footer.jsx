@@ -1,5 +1,10 @@
 import React from "react";
-import { FaLinkedinIn, FaGithub, FaInstagram } from "react-icons/fa"; // Import social icons
+import {
+  FaLinkedinIn,
+  FaGithub,
+  FaInstagram,
+  FaXTwitter,
+} from "react-icons/fa6"; // Import social icons
 
 const Footer = () => {
   return (
@@ -31,7 +36,7 @@ const Footer = () => {
               <h3 className="text-lg font-semibold mb-2">Social Links</h3>
               <div className="flex justify-center md:justify-start space-x-4">
                 <a
-                  href="https://t.ly/GlHbn"
+                  href="https://www.linkedin.com/in/sujal-thapa-47880530b/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="transition duration-300"
@@ -53,6 +58,14 @@ const Footer = () => {
                   className="transition duration-300"
                 >
                   <FaInstagram className="text-xl text-pink-400 hover:text-pink-300" />
+                </a>
+                <a
+                  href="https://x.com/SujalThapa304"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition duration-300"
+                >
+                  <FaXTwitter className="text-xl text-pink-400 hover:text-pink-300" />
                 </a>
               </div>
             </div>

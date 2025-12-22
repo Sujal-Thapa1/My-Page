@@ -1,5 +1,10 @@
 import React from "react";
-import { FaLinkedinIn, FaGithub, FaInstagram } from "react-icons/fa";
+import {
+  FaLinkedinIn,
+  FaGithub,
+  FaInstagram,
+  FaXTwitter,
+} from "react-icons/fa6";
 import profile from "/public/images/profile.png";
 import resume from "/public/sujal-cv.pdf";
 
@@ -37,7 +42,7 @@ const Hero = () => {
           </div>
           <div className="flex justify-center md:justify-start space-x-4 mt-6">
             <a
-              href="https://t.ly/GlHbn"
+              href="https://www.linkedin.com/in/sujal-thapa-47880530b/"
               target="_blank"
               rel="noopener noreferrer"
               className="transition duration-300"
@@ -59,6 +64,14 @@ const Hero = () => {
               className="transition duration-300"
             >
               <FaInstagram className="text-2xl text-pink-500 hover:text-pink-300" />
+            </a>
+            <a
+              href="https://x.com/SujalThapa304"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition duration-300"
+            >
+              <FaXTwitter className="text-2xl text-pink-500 hover:text-pink-300" />
             </a>
           </div>
         </div>

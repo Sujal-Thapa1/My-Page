@@ -9,7 +9,7 @@ const projectsData = [
       "A smart inter-campus transportation management system for faculty, admins, and drivers.",
     liveLink: "",
     githubLink: "https://github.com/orgs/MSU-Shuttle-Service/repositories",
-    image: "/images/msu-shuttle.jpeg",
+    image: "/images/msu-shuttle.png",
     status: "in-progress",
   },
   {
@@ -29,6 +29,7 @@ const projectsData = [
     githubLink:
       "https://github.Ccom/Sujal-Thapa1/React-Projects/tree/main/Gradient%20Color%20Maker/GradientColorMaker",
     image: "/images/gradient-maker.png",
+    status: "finished",
   },
 ];
 
