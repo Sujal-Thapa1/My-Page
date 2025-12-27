@@ -133,7 +133,7 @@ const About = () => {
                   + Hosting
                 </li>
                 <li className="hover:text-blue-500 transition-colors duration-200">
-                  + E-Commerce
+                  + Backend Development
                 </li>
               </ul>
             </div>

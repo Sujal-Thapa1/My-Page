@@ -45,16 +45,16 @@ const Navbar = () => {
   return (
     <nav
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        isScrolled
-          ? "bg-[#1C1C1C]/90 backdrop-blur-md border-b border-gray-700"
-          : "bg-transparent"
+        isScrolled ? "bg-[#007a9b]/90 backdrop-blur-md" : "bg-transparent"
       }`}
     >
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-        {/* Logo / Name */}
+        {/* Logo */}
         <a
           href="#home"
-          className={`text-3xl font-serif font-semibold tracking-wide ${isScrolled ? "text-gray-100" : "text-gray-800 hover:text-blue-500"}`}
+          className={`text-3xl font-serif font-semibold tracking-wide ${
+            isScrolled ? "text-white" : "text-gray-800"
+          }`}
         >
           Sujal Thapa
         </a>
@@ -65,13 +65,16 @@ const Navbar = () => {
             <a
               key={link.id}
               href={`#${link.id}`}
-              className={`transition ${
-                activeLink === link.id
-                  ? isScrolled ? "text-white" : "text-gray-800 hover:text-blue-500"
-                  : isScrolled
-                  ? "text-gray-400 hover:text-white"
-                  : "text-gray-800 hover:text-blue-500"
-              }`}
+              className={`relative pb-1 transition-all duration-300
+                ${isScrolled ? "text-white" : "text-gray-800"}
+                after:content-[''] after:absolute after:left-0 after:-bottom-0.5
+                after:h-[2px] after:bg-white after:transition-all after:duration-300
+                ${
+                  activeLink === link.id
+                    ? "after:w-full"
+                    : "after:w-0 hover:after:w-full"
+                }
+              `}
             >
               {link.title}
             </a>
@@ -81,7 +84,7 @@ const Navbar = () => {
         {/* Mobile Toggle */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className={`md:hidden ${isScrolled ? "text-gray-200" : "text-gray-700"}`}
+          className={`md:hidden ${isScrolled ? "text-white" : "text-gray-700"}`}
         >
           <svg
             className="w-6 h-6"
@@ -93,11 +96,7 @@ const Navbar = () => {
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth="2"
-              d={
-                isOpen
-                  ? "M6 18L18 6M6 6l12 12"
-                  : "M4 6h16M4 12h16M4 18h16"
-              }
+              d={isOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
             />
           </svg>
         </button>
@@ -105,16 +104,14 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden bg-[#1C1C1C] border-t border-gray-700">
+        <div className="md:hidden bg-[#007a9b]">
           <div className="px-6 py-4 space-y-3">
             {navLinks.map((link) => (
               <a
                 key={link.id}
                 href={`#${link.id}`}
                 className={`block text-sm uppercase tracking-wider ${
-                  activeLink === link.id
-                    ? "text-white"
-                    : "text-gray-400"
+                  activeLink === link.id ? "text-white" : "text-gray-300"
                 }`}
                 onClick={() => setIsOpen(false)}
               >
