@@ -4,10 +4,10 @@ import { useInView } from "react-intersection-observer";
 
 const educations = [
   {
-    degree: "Bachelor of Science in Computer Science",
+    degree: "Bachelor of Computer Applications",
     institution: "Medhavi Skills University",
     year: "2024 – Present",
-    specialization: "Software Engineering",
+    specialization: "Cloud Computing & Information Security",
   },
   {
     degree: "Diploma in Computer Applications",
