@@ -1,19 +1,18 @@
-import React from 'react';
-import Navbar from './components/Navbar';
-import Hero from './sections/Hero';
-import About from './sections/About';
-import Skills from './sections/Skills';
-import Projects from './sections/Projects';
-import Education from './sections/Education';
+import React from "react";
+import Navbar from "./components/Navbar";
+import Hero from "./sections/Hero";
+import About from "./sections/About";
+import Skills from "./sections/Skills";
+import Projects from "./sections/Projects";
+import Education from "./sections/Education";
 
-
-import Contact from './sections/Contact';
-import Footer from './components/Footer';
-import FadeIn from './components/FadeIn';
+import Contact from "./sections/Contact";
+import Footer from "./components/Footer";
+import FadeIn from "./components/FadeIn";
 
 function App() {
   return (
-    <div className="bg-gray-900 text-white overflow-x-hidden">
+    <div className="bg-[#F6F1EB] text-white">
       <Navbar />
       <Hero />
       <FadeIn>
@@ -28,7 +27,6 @@ function App() {
       <FadeIn>
         <Education />
       </FadeIn>
-
 
       <FadeIn>
         <Contact />

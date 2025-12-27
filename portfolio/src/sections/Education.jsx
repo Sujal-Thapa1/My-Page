@@ -1,88 +1,105 @@
 import React from "react";
+import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
 
 const educations = [
   {
     degree: "Bachelor of Science in Computer Science",
     institution: "Medhavi Skills University",
-    year: "2024–Present",
+    year: "2024 – Present",
     specialization: "Software Engineering",
   },
   {
     degree: "Diploma in Computer Applications",
     institution: "AISECT University",
-    year: "2023-2024",
+    year: "2023 – 2024",
     specialization: "Computer Applications",
   },
   {
     degree: "Higher Secondary Education (10+2)",
     institution: "Scottish University Mission Institution",
-    year: "2021-2023",
+    year: "2021 – 2023",
     specialization: "Science Stream",
   },
 ];
 
 const Education = () => {
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+    threshold: 0.2,
+  });
+
+  const leftVariants = {
+    hidden: { x: -100, opacity: 0 },
+    visible: { x: 0, opacity: 1, transition: { duration: 0.5, delay: 0.2 } },
+  };
+
+  const rightVariants = {
+    hidden: { x: 100, opacity: 0 },
+    visible: { x: 0, opacity: 1, transition: { duration: 0.5, delay: 0.2 } },
+  };
+
   return (
-    <section
-      id="education"
-      className="py-32 bg-gray-900 text-white rounded-3xl"
-    >
-      <div className="container mx-auto px-6 max-w-4xl">
-        <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-center mb-16 text-white">
+    <section id="education" className="py-40 bg-[#F6F1EB] text-gray-800">
+      <div ref={ref} className="container mx-auto px-6 max-w-4xl">
+        {/* SECTION TITLE */}
+        <motion.h2
+          initial={{ opacity: 0, y: 50 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5 }}
+          className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold text-center mb-24"
+        >
           Education
-        </h2>
+        </motion.h2>
+
+        {/* TIMELINE */}
         <div className="relative">
-          {/* Vertical line - responsive positioning */}
-          <div className="absolute left-4 md:left-1/2 md:-translate-x-1/2 w-0.5 bg-gray-300 h-full"></div>
+          {/* Vertical Line */}
+          <div className="absolute left-5 md:left-1/2 md:-translate-x-1/2 w-px bg-gray-700 h-full"></div>
 
           {educations.map((edu, index) => (
-            <div
+            <motion.div
               key={index}
-              className={`flex w-full my-8 ${
-                index % 2 === 0 ? "justify-start" : "justify-end" // Mobile: content on right, md+: alternating
+              variants={index % 2 === 0 ? leftVariants : rightVariants}
+              initial="hidden"
+              animate={inView ? "visible" : "hidden"}
+              className={`relative flex mb-20 ${
+                index % 2 === 0 ? "md:justify-start" : "md:justify-end"
               }`}
             >
-              {/* Content Block */}
+              {/* CONTENT */}
               <div
-                className={`w-full md:w-1/2 p-4 ${
-                  index % 2 === 0
-                    ? "md:order-1 md:text-right md:pr-8"
-                    : "md:order-3 md:text-left md:pl-4"
-                } text-left pl-16`} // Mobile: pl-16 for dot, Desktop: p-4 (overwritten by md:pr-8 or md:pl-4)
+                className={`bg-white shadow-sm rounded-xl p-8 w-full md:w-[45%]
+                  ${
+                    index % 2 === 0
+                      ? "md:mr-auto md:text-right md:pr-10"
+                      : "md:ml-auto md:text-left md:pl-10"
+                  }
+                  pl-16 md:pl-8`}
               >
-                <h3 className="text-xl sm:text-2xl md:text-3xl font-semibold mb-2 text-white">
+                <h3 className="text-xl md:text-2xl font-semibold mb-2">
                   {edu.degree}
                 </h3>
-                <p className="text-sm sm:text-base uppercase tracking-wider mt-1 mb-2 text-gray-300">
+
+                <p className="text-sm uppercase tracking-widest text-gray-500 mb-2">
                   {edu.year}
                 </p>
-                <p className="text-base sm:text-lg text-gray-300">
-                  {edu.institution}
-                </p>
+
+                <p className="text-gray-600">{edu.institution}</p>
+
                 {edu.specialization && (
-                  <p className="text-sm sm:text-base text-gray-300 mt-2">
+                  <p className="text-sm text-gray-500 mt-2">
                     Specialization: {edu.specialization}
                   </p>
                 )}
               </div>
 
-              {/* Central Dot - responsive positioning */}
+              {/* DOT */}
               <div
-                className="z-10 flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-blue-500 border-4 border-white shadow-lg order-2
-                            absolute left-4 md:relative md:left-auto md:-translate-x-1/2"
-              >
-                <span className="text-xs sm:text-sm font-bold text-white">
-                  {index + 1}
-                </span>
-              </div>
-
-              {/* Spacer Div (only visible on md+ for alternating layout) */}
-              <div
-                className={`hidden md:block w-1/2 p-4 ${
-                  index % 2 === 0 ? "md:order-3" : "md:order-1"
-                }`}
+                className="absolute left-5 md:left-1/2 md:-translate-x-1/2
+                           w-4 h-4 rounded-full bg-gray-800"
               ></div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

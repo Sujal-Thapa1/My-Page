@@ -1,10 +1,11 @@
 import React from "react";
-import ProjectCard from "../components/ProjectCard"; // Import the ProjectCard component
+import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+import ProjectCard from "../components/ProjectCard";
 
-// Dummy Project Data (will need image updates in ProjectCard)
 const projectsData = [
   {
-    title: "MSu Shuttle Service",
+    title: "MSU Shuttle Service",
     description:
       "A smart inter-campus transportation management system for faculty, admins, and drivers.",
     liveLink: "",
@@ -24,30 +25,64 @@ const projectsData = [
   {
     title: "Gradient Color Maker",
     description:
-      "A simple gradient color maker showcasing my projects, skills, and experience with modern web tech.",
+      "A web-based gradient color generator showcasing modern UI practices and React fundamentals.",
     liveLink: "#",
     githubLink:
-      "https://github.Ccom/Sujal-Thapa1/React-Projects/tree/main/Gradient%20Color%20Maker/GradientColorMaker",
+      "https://github.com/Sujal-Thapa1/React-Projects/tree/main/Gradient%20Color%20Maker/GradientColorMaker",
     image: "/images/gradient-maker.png",
     status: "finished",
   },
 ];
 
 const Projects = () => {
-  return (
-    <section id="projects" className="py-20 bg-gray-900 text-white">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-center mb-12 text-white">
-          Projects
-        </h2>
-        <p className="text-lg text-gray-300 text-center max-w-2xl mx-auto mb-16">
-          Explore a selection of real-world projects, demonstrating diverse
-          technologies and problem-solving approaches.
-        </p>
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+    threshold: 0.2,
+  });
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+  const cardVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: (i) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: i * 0.2,
+      },
+    }),
+  };
+
+  return (
+    <section id="projects" className="py-40 bg-[#F6F1EB] text-gray-800">
+      <div ref={ref} className="container mx-auto px-6">
+        {/* SECTION HEADER */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5 }}
+          className="max-w-3xl mx-auto text-center mb-24"
+        >
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold mb-6">
+            Projects
+          </h2>
+          <p className="text-lg text-gray-600 leading-relaxed">
+            A selection of academic and real-world projects that demonstrate my
+            approach to problem-solving, system design, and modern web
+            development.
+          </p>
+        </motion.div>
+
+        {/* PROJECT GRID */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
           {projectsData.map((project, index) => (
-            <ProjectCard key={index} project={project} />
+            <motion.div
+              key={index}
+              custom={index}
+              variants={cardVariants}
+              initial="hidden"
+              animate={inView ? "visible" : "hidden"}
+            >
+              <ProjectCard project={project} />
+            </motion.div>
           ))}
         </div>
       </div>

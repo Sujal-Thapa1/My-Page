@@ -3,6 +3,7 @@ import React, { useState, useEffect, useMemo } from "react";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeLink, setActiveLink] = useState("home");
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const navLinks = useMemo(
     () => [
@@ -11,7 +12,6 @@ const Navbar = () => {
       { id: "skills", title: "Skills" },
       { id: "projects", title: "Projects" },
       { id: "education", title: "Education" },
-
       { id: "contact", title: "Contact" },
     ],
     []
@@ -19,18 +19,18 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      let currentActive = 'home'; // Default to home
-      const navbarHeight = 64; // Approximate height of the fixed navbar
+      const scrollPosition = window.scrollY;
+      setIsScrolled(scrollPosition > 50);
+
+      let currentActive = "home";
+      const navbarHeight = 72;
 
       for (let i = navLinks.length - 1; i >= 0; i--) {
-        const link = navLinks[i];
-        const section = document.getElementById(link.id);
+        const section = document.getElementById(navLinks[i].id);
         if (section) {
           const rect = section.getBoundingClientRect();
-          // Check if the section is in view and its top is above or at the navbar's bottom
-          // AND it's not scrolled completely past.
           if (rect.top <= navbarHeight) {
-            currentActive = link.id;
+            currentActive = navLinks[i].id;
             break;
           }
         }
@@ -43,57 +43,78 @@ const Navbar = () => {
   }, [navLinks]);
 
   return (
-    <nav className="bg-gray-800 text-white fixed w-full z-50 top-0 shadow-md">
+    <nav
+      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+        isScrolled
+          ? "bg-[#1C1C1C]/90 backdrop-blur-md border-b border-gray-700"
+          : "bg-transparent"
+      }`}
+    >
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-        <div className="flex items-center space-x-4"> {/* Container for toggle and logo */}
-          <div className="text-2xl font-bold">
-            <a href="#home">Sujal Thapa</a>
-          </div>
-        </div>
-        <div className="hidden md:flex space-x-6">
+        {/* Logo / Name */}
+        <a
+          href="#home"
+          className={`text-3xl font-serif font-semibold tracking-wide ${isScrolled ? "text-gray-100" : "text-gray-800 hover:text-blue-500"}`}
+        >
+          Sujal Thapa
+        </a>
+
+        {/* Desktop Nav */}
+        <div className="hidden md:flex space-x-8 text-sm uppercase tracking-wider">
           {navLinks.map((link) => (
             <a
               key={link.id}
               href={`#${link.id}`}
-              className={`hover:text-gray-400 ${
-                activeLink === link.id ? "text-blue-400" : ""
+              className={`transition ${
+                activeLink === link.id
+                  ? isScrolled ? "text-white" : "text-gray-800 hover:text-blue-500"
+                  : isScrolled
+                  ? "text-gray-400 hover:text-white"
+                  : "text-gray-800 hover:text-blue-500"
               }`}
             >
               {link.title}
             </a>
           ))}
         </div>
-        <div className="md:hidden">
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="focus:outline-none"
+
+        {/* Mobile Toggle */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className={`md:hidden ${isScrolled ? "text-gray-200" : "text-gray-700"}`}
+        >
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
           >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d={isOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
-              ></path>
-            </svg>
-          </button>
-        </div>
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d={
+                isOpen
+                  ? "M6 18L18 6M6 6l12 12"
+                  : "M4 6h16M4 12h16M4 18h16"
+              }
+            />
+          </svg>
+        </button>
       </div>
+
+      {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden bg-gray-800">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+        <div className="md:hidden bg-[#1C1C1C] border-t border-gray-700">
+          <div className="px-6 py-4 space-y-3">
             {navLinks.map((link) => (
               <a
                 key={link.id}
                 href={`#${link.id}`}
-                className={`block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700 ${
-                  activeLink === link.id ? "text-blue-400" : ""
+                className={`block text-sm uppercase tracking-wider ${
+                  activeLink === link.id
+                    ? "text-white"
+                    : "text-gray-400"
                 }`}
                 onClick={() => setIsOpen(false)}
               >
