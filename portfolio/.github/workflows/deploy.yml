@@ -3,7 +3,7 @@ name: Deploy React App to GitHub Pages
 on:
   push:
     branches:
-      - gh-pages
+      - master
 
 permissions:
   contents: read
@@ -32,7 +32,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist # Vite output folder
+          path: ../../dist # Vite output folder
 
   deploy:
     environment:
