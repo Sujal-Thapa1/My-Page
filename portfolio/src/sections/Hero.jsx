@@ -21,7 +21,7 @@ const Hero = () => {
           </p>
 
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif font-bold leading-tight mb-6">
-            Sujal <br className="hidden md:block" /> Mager
+            Sujal <br className="hidden md:block" /> Mangar
           </h1>
 
           <p className="text-lg md:text-xl text-gray-600 mb-6">
