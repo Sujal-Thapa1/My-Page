@@ -1,5 +1,6 @@
 import React from "react";
 import { useInView } from "react-intersection-observer";
+import { motion } from "framer-motion";
 import about from "/public/images/about.jpeg";
 import { FaChess, FaLaptop, FaPlane } from "react-icons/fa";
 
