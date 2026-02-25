@@ -48,7 +48,7 @@ export default function Hero() {
 
       {/* ── Two-column grid (same container as other sections) ── */}
       <div
-        className="relative container mx-auto px-6 max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-76 items-center"
+        className="relative container mx-auto px-6 max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-20 lg:gap-56 items-center"
         style={{ zIndex: 10 }}>
         {/* ════════════════════════════
             LEFT — Text (mobile: order-2, desktop: order-1)
