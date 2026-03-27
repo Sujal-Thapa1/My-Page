@@ -114,17 +114,21 @@ export default function App() {
   useEffect(() => {
     if (!footerInnerRef.current || !spacerRef.current || !expInnerRef.current || !expSpacerRef.current) return;
 
-    // ── FOOTER PARALLAX ──
+    // ── FOOTER PARALLAX & TALL-FOOTER SCROLL FIX ──
+    const overflowFoot = Math.max(0, footerHeight - window.innerHeight);
+
     const stFoot = ScrollTrigger.create({
       trigger: spacerRef.current,
       start: "top bottom",
       end: "bottom bottom",
-      scrub: 1.5,
+      scrub: true,
       onUpdate(self) {
         const t = self.progress;
+        // If footer is taller than screen, it starts anchored at bottom:0 (meaning its top is above the screen).
+        // To show the top, we push it down by `overflowFoot` initially, then smoothly translate it UP as you scroll.
+        // We add the 40px parallax offset so it still has that "Zetta Joule" reveal slide!
         gsap.set(footerInnerRef.current, {
-          y: 40 * (1 - t),
-          // removed scale for purity 
+          y: (overflowFoot + 40) * (1 - t)
         });
       },
     });

@@ -119,3 +119,59 @@ html.lenis { height: auto; }
   user-select: none;
 }
 .embla__slide { flex: 0 0 auto; }
+
+/* ─── Mobile Responsiveness ─── */
+@media (max-width: 768px) {
+  /* Hide Desktop links, show Hamburger */
+  .zj-desk-links { display: none !important; }
+  .zj-ham { display: block !important; }
+  
+  /* Reset container padding unconditionally */
+  section, footer { padding: 80px 0 !important; }
+  section > div, footer > div { padding: 0 24px !important; }
+  #experience > div > div > div { padding: 60px 24px !important; }
+  
+  /* Hard reset on intro/header grids with excessive side padding */
+  .proj-header-grid { padding: 0 24px !important; margin-bottom: 40px !important; gap: 2rem !important; }
+  .embla { padding: 0 24px !important; }
+
+  /* Typography scale */
+  h1 { font-size: clamp(3rem, 15vw, 4.5rem) !important; letter-spacing: -0.05em !important; }
+  h2 { font-size: clamp(2rem, 11vw, 3.5rem) !important; }
+  h3 { font-size: 22px !important; }
+  p { font-size: 14px !important; line-height: 1.6 !important; }
+
+  /* Fix GSAP large transform origins that overflow on mobile */
+  html, body { overflow-x: hidden; width: 100vw; }
+
+  /* Re-stack Grids */
+  div[style*="gridTemplateColumns: 220px 1fr"],
+  div[style*="gridTemplateColumns: 200px 1fr"],
+  div[style*="gridTemplateColumns: 1fr 1fr"],
+  div[style*="gridTemplateColumns: 1fr 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+  
+  /* Exact inline styles matching */
+  div[style*="grid-template-columns: 220px 1fr"],
+  div[style*="grid-template-columns: 200px 1fr"],
+  div[style*="grid-template-columns: 1fr 1fr"],
+  div[style*="grid-template-columns: 1fr 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+  
+  /* Footer Grid & Huge Text */
+  .footer-grid {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+    padding-bottom: 32px !important;
+  }
+  
+  /* Hero intro text */
+  /* Hero intro gap fix */
+  .hero-l1 { top: 22% !important; }
+  .hero-l2 { top: 38% !important; }
+  .hero-l3 { top: 48% !important; }
+}
