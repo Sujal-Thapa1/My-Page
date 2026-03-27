@@ -1,199 +1,235 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { gsap } from "gsap";
 
-const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [activeLink, setActiveLink] = useState("home");
-  const [isScrolled, setIsScrolled] = useState(false);
+/* ── ZJ letter-by-letter hover ── */
+const ZJLink = ({ text, href, active, dark }) => {
+  const ref = useRef(null);
 
-  const navLinks = useMemo(
-    () => [
-      { id: "home", title: "Home" },
-      { id: "about", title: "About" },
-      { id: "skills", title: "Skills" },
-      { id: "projects", title: "Projects" },
-      { id: "education", title: "Education" },
-      { id: "contact", title: "Contact" },
-    ],
-    [],
-  );
-
-  /* Lock body scroll when menu is open */
-  useEffect(() => {
-    document.body.style.overflow = isOpen ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isOpen]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-
-      let currentActive = "home";
-      const navbarHeight = 72;
-      for (let i = navLinks.length - 1; i >= 0; i--) {
-        const section = document.getElementById(navLinks[i].id);
-        if (section && section.getBoundingClientRect().top <= navbarHeight) {
-          currentActive = navLinks[i].id;
-          break;
+  const onEnter = () => {
+    const els = ref.current?.querySelectorAll("span");
+    if (!els) return;
+    gsap.killTweensOf(els);
+    gsap.fromTo(els,
+      { y:0 },
+      { y:-2, opacity:.55, stagger:.028, duration:.22, ease:"power2.out",
+        onComplete() {
+          gsap.to(els, { y:0, opacity:1, stagger:.028, duration:.28, ease:"power3.out" });
         }
       }
-      setActiveLink(currentActive);
+    );
+  };
+
+  const onClick = (e) => {
+    e.preventDefault();
+    if (window.lenis) {
+      window.lenis.scrollTo(href, { offset: 0, duration: 1.5, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+    } else {
+      const target = document.querySelector(href);
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  return (
+    <a ref={ref} href={href} onMouseEnter={onEnter} onClick={onClick} style={{
+      display:"inline-flex", textDecoration:"none",
+      position:"relative",
+    }}>
+      {text.split("").map((c, i) => (
+        <span key={i} style={{
+          display:"inline-block",
+          fontSize:13, fontWeight:400,
+          fontFamily:"'Inter','Helvetica Neue',sans-serif",
+          color: active
+            ? (dark ? "#1a1a2e" : "rgba(255,255,255,1)")
+            : (dark ? "rgba(26,26,46,.6)" : "rgba(255,255,255,.75)"),
+          letterSpacing:".02em",
+        }}>{c === " " ? "\u00A0" : c}</span>
+      ))}
+      {active && (
+        <span style={{
+          position:"absolute", bottom:-4, left:0, right:0,
+          height:1,
+          background: dark ? "rgba(26,26,46,.4)" : "rgba(255,255,255,.5)",
+        }} />
+      )}
+    </a>
+  );
+};
+
+const LINKS = [
+  { id:"home",       title:"Home" },
+  { id:"about",      title:"About" },
+  { id:"skills",     title:"Skills" },
+  { id:"experience", title:"Experience" },
+  { id:"education",  title:"Education" },
+  { id:"projects",   title:"Projects" },
+  { id:"contact",    title:"Contact" },
+];
+
+export default function Navbar() {
+  const [active, setActive]   = useState("home");
+  const [pastHero, setPast]   = useState(false);
+  const [scrolled, setScroll] = useState(false);
+  const [open, setOpen]       = useState(false);
+  const navRef = useRef(null);
+
+  /* entrance */
+  useEffect(() => {
+    gsap.fromTo(navRef.current,
+      { y:-64, opacity:0 },
+      { y:0, opacity:1, duration:1, delay:.25, ease:"expo.out" });
+  }, []);
+
+  /* scroll tracking */
+  useEffect(() => {
+    const handle = () => {
+      const y = window.scrollY;
+      const vh = window.innerHeight;
+      setScroll(y > 30);
+      setPast(y > vh * .82);
+
+      let cur = "home";
+      for (const l of LINKS) {
+        const el = document.getElementById(l.id);
+        if (el && el.getBoundingClientRect().top <= 90) cur = l.id;
+      }
+      setActive(cur);
     };
+    window.addEventListener("scroll", handle, { passive:true });
+    return () => window.removeEventListener("scroll", handle);
+  }, []);
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [navLinks]);
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [open]);
 
-  const close = () => setIsOpen(false);
+  /* ── derived style ── */
+  const dark = pastHero;   // light-mode nav bg
+  const navBg = dark
+    ? `rgba(245,245,247,${scrolled ? ".92" : ".0"})`
+    : `rgba(118,152,220,${scrolled ? ".1" : ".0"})`;
+  const blurStyle = scrolled || dark
+    ? { backdropFilter:"blur(18px)", WebkitBackdropFilter:"blur(18px)" }
+    : {};
+  const borderBot = dark && scrolled
+    ? "1px solid rgba(0,0,0,0.09)"
+    : "1px solid transparent";
+  const logoClr    = dark ? "#1a1a2e" : "#fff";
+  const ctaBg      = dark ? "#1a1a2e"                      : "rgba(255,255,255,.15)";
+  const ctaColor   = dark ? "#ffffff"                      : "rgba(255,255,255,.95)";
+  const ctaBorder  = dark ? "1px solid transparent"        : "1px solid rgba(255,255,255,.6)";
 
   return (
     <>
-      <nav
-        className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-          isScrolled ? "bg-[#007a9b]/90 backdrop-blur-md" : "bg-transparent"
-        }`}>
-        <div className="container mx-auto px-6 py-4 flex justify-between items-center">
+      <nav ref={navRef} style={{
+        position:"fixed", top:0, left:0, right:0, zIndex:50,
+        background:navBg, borderBottom:borderBot,
+        ...blurStyle,
+        transition:"background .5s, border-color .5s",
+      }}>
+        <div style={{
+          maxWidth:1280, margin:"0 auto",
+          padding:"0 32px", height:66,
+          display:"flex", alignItems:"center",
+          justifyContent:"space-between", gap:24,
+        }}>
           {/* Logo */}
-          <a
-            href="#home"
-            className={`text-3xl font-serif font-semibold tracking-wide ${
-              isScrolled ? "text-white" : "text-gray-800"
-            }`}
-            onClick={close}>
-            Sujal Thapa
+          <a href="#home" style={{ display:"flex", alignItems:"center", gap:9, textDecoration:"none", flexShrink:0 }}>
+            {/* Concentric-ring mark (ZJ-style) */}
+            <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+              <circle cx="13" cy="13" r="12" stroke={logoClr} strokeWidth="1.2" opacity=".9"/>
+              <circle cx="13" cy="13" r="8"  stroke={logoClr} strokeWidth="1"   opacity=".65"/>
+              <circle cx="13" cy="13" r="4"  stroke={logoClr} strokeWidth=".8"  opacity=".45"/>
+              <circle cx="13" cy="13" r="2"  fill={logoClr}                     opacity=".75"/>
+            </svg>
+            <span style={{
+              fontSize:15, fontWeight:500,
+              fontFamily:"'Inter','Helvetica Neue',sans-serif",
+              color:logoClr, letterSpacing:".02em",
+              transition:"color .4s",
+            }}>Sujal Thapa</span>
           </a>
 
-          {/* Desktop Nav */}
-          <div className="hidden md:flex space-x-8 text-sm uppercase tracking-wider">
-            {navLinks.map((link) => (
-              <a
-                key={link.id}
-                href={`#${link.id}`}
-                className={`relative pb-1 transition-all duration-300
-                  ${isScrolled ? "text-white" : "text-gray-800"}
-                  after:content-[''] after:absolute after:left-0 after:-bottom-0.5
-                  after:h-[2px] after:bg-white after:transition-all after:duration-300
-                  ${
-                    activeLink === link.id
-                      ? "after:w-full"
-                      : "after:w-0 hover:after:w-full"
-                  }
-                `}>
-                {link.title}
-              </a>
+          {/* Desktop links */}
+          <div style={{
+            display:"flex", alignItems:"center", gap:32,
+            flex:1, justifyContent:"center",
+          }} className="zj-desk-links">
+            {LINKS.map(l => (
+              <ZJLink key={l.id} text={l.title} href={`#${l.id}`}
+                active={active===l.id} dark={dark} />
             ))}
           </div>
 
-          {/* Hamburger — visible on mobile only */}
+          {/* Get in Touch CTA */}
+          <a href="#contact" style={{
+            flexShrink:0,
+            padding:"9px 20px",
+            background:ctaBg, color:ctaColor, border:ctaBorder,
+            borderRadius:7, fontSize:13, fontWeight:500,
+            fontFamily:"'Inter','Helvetica Neue',sans-serif",
+            textDecoration:"none",
+            letterSpacing:".01em",
+            transition:"background .35s, color .35s, box-shadow .25s",
+          }}
+            onMouseEnter={e => { e.currentTarget.style.boxShadow="0 4px 24px rgba(0,0,0,0.12)"; }}
+            onMouseLeave={e => { e.currentTarget.style.boxShadow="none"; }}>
+            Get in Touch
+          </a>
+
+          {/* Hamburger */}
           <button
-            onClick={() => setIsOpen(!isOpen)}
-            aria-label={isOpen ? "Close menu" : "Open menu"}
-            className={`md:hidden z-[60] relative transition-colors duration-200 ${
-              isOpen
-                ? "text-white"
-                : isScrolled
-                  ? "text-white"
-                  : "text-gray-700"
-            }`}>
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d={isOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
-              />
+            onClick={() => setOpen(o=>!o)}
+            aria-label="menu"
+            style={{
+              display:"none", background:"none", border:"none",
+              color:logoClr, cursor:"pointer", padding:4,
+            }}
+            className="zj-ham"
+          >
+            <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5"
+                d={open ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
             </svg>
           </button>
         </div>
       </nav>
 
-      {/* ── Full-screen mobile overlay ── */}
-      <div
-        className="md:hidden"
-        style={{
-          position: "fixed",
-          inset: 0,
-          zIndex: 40,
-          /* Slide in from right */
-          transform: isOpen ? "translateX(0)" : "translateX(100%)",
-          transition: "transform 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
-          /* Blurry glass background */
-          background: "rgba(0, 40, 60, 0.75)",
-          backdropFilter: "blur(20px)",
-          WebkitBackdropFilter: "blur(20px)",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 0,
-        }}
-        /* Click backdrop to close */
-        onClick={(e) => {
-          if (e.target === e.currentTarget) close();
-        }}>
-        {/* Nav links — large, centred */}
-        <nav
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 8,
-            width: "100%",
-          }}>
-          {navLinks.map((link, i) => (
-            <a
-              key={link.id}
-              href={`#${link.id}`}
-              onClick={close}
-              style={{
-                display: "block",
-                width: "100%",
-                textAlign: "center",
-                padding: "18px 0",
-                fontSize: 22,
-                fontWeight: activeLink === link.id ? 700 : 400,
-                letterSpacing: "0.12em",
-                textTransform: "uppercase",
-                textDecoration: "none",
-                color:
-                  activeLink === link.id ? "#bef264" : "rgba(255,255,255,0.85)",
-                borderBottom:
-                  i < navLinks.length - 1
-                    ? "1px solid rgba(255,255,255,0.08)"
-                    : "none",
-                transition: "color 0.2s",
-                /* Stagger in when open */
-                opacity: isOpen ? 1 : 0,
-                transform: isOpen ? "translateY(0)" : "translateY(12px)",
-                transitionDelay: isOpen ? `${i * 0.05 + 0.15}s` : "0s",
-                transitionProperty: "opacity, transform, color",
-                transitionDuration: "0.35s",
-              }}>
-              {link.title}
-            </a>
-          ))}
-        </nav>
-
-        {/* Bottom hint */}
-        <p
-          style={{
-            position: "absolute",
-            bottom: 32,
-            color: "rgba(255,255,255,0.3)",
-            fontSize: 11,
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
-          }}>
-          Tap a link or ✕ to close
-        </p>
+      {/* Mobile overlay */}
+      <div style={{
+        position:"fixed", inset:0, zIndex:45,
+        background:"rgba(248,232,213,.97)",
+        backdropFilter:"blur(24px)",
+        display:"flex", flexDirection:"column",
+        alignItems:"center", justifyContent:"center", gap:8,
+        transform: open ? "translateX(0)" : "translateX(100%)",
+        transition:"transform .45s cubic-bezier(.4,0,.2,1)",
+      }} className="zj-mob-menu">
+        {LINKS.map((l,i) => (
+          <a key={l.id} href={`#${l.id}`} onClick={()=>setOpen(false)}
+            style={{
+              fontSize:28, fontWeight:300,
+              fontFamily:"'Inter','Helvetica Neue',sans-serif",
+              textDecoration:"none", padding:"16px 0", width:"100%", textAlign:"center",
+              color: active===l.id ? "#1a1a2e" : "rgba(26,26,46,.5)",
+              opacity: open ? 1 : 0,
+              transform: open ? "translateY(0)" : "translateY(20px)",
+              transition:`opacity .45s ${i*.06+.08}s, transform .45s ${i*.06+.08}s, color .2s`,
+            }}>
+            {l.title}
+          </a>
+        ))}
       </div>
+
+      <style>{`
+        @media(max-width:860px){
+          .zj-desk-links{ display:none !important; }
+          .zj-ham{ display:block !important; }
+          .zj-mob-menu{ display:flex !important; }
+        }
+        @media(min-width:861px){ .zj-mob-menu{ display:none !important; } }
+      `}</style>
     </>
   );
-};
-
-export default Navbar;
+}

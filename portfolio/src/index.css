@@ -1,94 +1,121 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,200;0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,300&display=swap');
 @import "tailwindcss";
 
-@layer base {
-  html {
-    @apply scroll-smooth;
-    overflow-x: hidden;
-    font-family: "Roboto", sans-serif;
-  }
+/* ─── Google Fonts: Inter ─── */
 
-  body {
-    font-family: "Roboto", sans-serif;
-    overflow-x: hidden;
-  }
 
-  *,
-  *::before,
-  *::after {
-    font-family: inherit;
-  }
+/* ─── Design Tokens ─── */
+:root {
+  --zj-bg:       #F5F5F7;
+  --zj-white:    #FFFFFF;
+  --zj-ink:      #1a1a2e;
+  --zj-muted:    #6b6e8a;
+  --zj-border:   rgba(0,0,0,0.09);
+  --zj-blue:     #7698DC;
+  --zj-dark:     #0f0f11;
+  --font: 'Inter', 'Helvetica Neue', Arial, sans-serif;
 }
 
-/* Hard override — beats Tailwind's preflight and any component inline defaults */
-html,
-body,
-#root,
-#root * {
-  font-family: "Roboto", sans-serif !important;
+/* ─── Base ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  font-family: var(--font);
+  overflow-x: hidden;
+  background: #F8E8D5;  /* ZJ gradient bottom visible on page load */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Fotter Wave */
-.wave-container {
-  position: absolute;
-  top: -100px;
-  left: 0;
-  width: 100%;
-  height: 100px;
-  overflow: hidden;
-  line-height: 0;
+body {
+  font-family: var(--font);
+  background: #F5F5F7;
+  color: var(--zj-ink);
+  overflow-x: hidden;
 }
 
-.wave {
-  position: absolute;
+/* ─── Lenis ─── */
+html.lenis { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* ─── Section Stacking: ZJ card-over-card effect ─────────────────────
+   IMPORTANT: The outer wrapper (StackSection's outer div) must have
+   paddingBottom so the sticky card has room to stay pinned while the
+   next section scrolls over it.
+
+   The sticky card itself gets scale(0.93) applied by GSAP ScrollTrigger
+   as the next card slides on top — creating depth/perspective.
+   ─────────────────────────────────────────────────────────────────── */
+
+/* Outer scroll-space wrapper — ensures sticky works */
+.zj-stack-outer {
+  position: relative;
+}
+
+/* The actual sticky card */
+.zj-stack-card {
+  position: sticky;
   top: 0;
-  left: 0;
-  width: 100%;
-  height: 100px;
-  /* High quality wave image */
-  background: url("/images/wave.png");
-  background-size: 1000px 100px;
-  animation: animate_wave 12s linear infinite;
+  border-radius: 24px 24px 0 0;
+  overflow: hidden;
+  will-change: transform, opacity;
+  transform-origin: top center;
+  min-height: 100vh;
+  /* Top-edge highlight — the thin white line visible as card slides up */
+  box-shadow:
+    0 -1px 0 rgba(255,255,255,0.18) inset,
+    0 -2px 32px rgba(0,0,0,0.12);
 }
 
-/* Layering logic from your reference code */
-.wave:nth-child(1) {
-  z-index: 1000;
-  opacity: 1;
-  bottom: 0;
-  animation-delay: 0s;
+/* ─── Custom cursor ─── */
+*, *::before, *::after { cursor: none !important; }
+
+#cur-dot {
+  position: fixed;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #1a1a2e;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: transform .1s, background .2s, opacity .2s;
+}
+#cur-ring {
+  position: fixed;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(26,26,46,0.25);
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%,-50%);
+  transition: width .3s cubic-bezier(.34,1.56,.64,1),
+              height .3s cubic-bezier(.34,1.56,.64,1),
+              border-color .3s, background .3s;
+}
+#cur-ring.big {
+  width: 52px; height: 52px;
+  border-color: rgba(26,26,46,0.4);
+  background: rgba(118,152,220,0.06);
 }
 
-.wave:nth-child(2) {
-  z-index: 999;
-  opacity: 0.5;
-  animation-direction: reverse;
-  /* Direction logic you requested */
-  animation-delay: -0.2s;
-  bottom: 10px;
-}
+/* Dark section cursor override */
+.section-dark #cur-dot { background: rgba(255,255,255,0.9); }
 
-.wave:nth-child(3) {
-  z-index: 998;
-  opacity: 0.2;
-  animation-delay: -5s;
-  bottom: 15px;
-}
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 2px; }
+::-webkit-scrollbar-track { background: #F5F5F7; }
+::-webkit-scrollbar-thumb { background: rgba(26,26,46,0.15); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(26,26,46,0.35); }
 
-.wave:nth-child(4) {
-  z-index: 997;
-  opacity: 0.7;
-  animation-direction: reverse;
-  /* Direction logic you requested */
-  animation-delay: -2s;
-  bottom: 20px;
-}
+/* ─── Selection ─── */
+::selection { background: rgba(118,152,220,0.22); color: var(--zj-ink); }
 
-@keyframes animate_wave {
-  0% {
-    background-position-x: 0;
-  }
-
-  100% {
-    background-position-x: 1000px;
-  }
+/* ─── Embla carousel ─── */
+.embla { overflow: hidden; }
+.embla__container {
+  display: flex;
+  gap: 20px;
+  user-select: none;
 }
+.embla__slide { flex: 0 0 auto; }

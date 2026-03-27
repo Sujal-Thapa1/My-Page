@@ -1,94 +1,143 @@
-import React from "react";
-import {
-  FaLinkedinIn,
-  FaGithub,
-  FaInstagram,
-  FaXTwitter,
-} from "react-icons/fa6";
+import React, { useEffect, useRef } from "react";
+import { FaLinkedinIn, FaGithub, FaInstagram, FaXTwitter } from "react-icons/fa6";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-const Footer = () => {
+gsap.registerPlugin(ScrollTrigger);
+
+const socials = [
+  { href: "https://www.linkedin.com/in/sujal-thapa-47880530b/", Icon: FaLinkedinIn, label: "LinkedIn" },
+  { href: "https://github.com/Sujal-Thapa1", Icon: FaGithub, label: "GitHub" },
+  { href: "https://www.instagram.com/be_uni.que__/", Icon: FaInstagram, label: "Instagram" },
+  { href: "https://x.com/SujalThapa304", Icon: FaXTwitter, label: "X (Twitter)" },
+];
+
+export default function Footer() {
+  const secRef = useRef(null);
+  const bigRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo(bigRef.current,
+        { clipPath: "inset(0 0 100% 0)", y: 24, opacity: 0 },
+        {
+          clipPath: "inset(0 0 0% 0)", y: 0, opacity: 1, duration: 1.3, ease: "expo.out",
+          scrollTrigger: { trigger: bigRef.current, start: "top 90%", once: true }
+        });
+    }, secRef.current);
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <footer className="relative w-full bg-[#007a9b] text-white pt-32 pb-8 mt-24">
-      {/* Wave Container */}
-      <div className="wave-container">
-        <div className="wave"></div>
-        <div className="wave"></div>
-        <div className="wave"></div>
-        <div className="wave"></div>
-      </div>
+    <footer ref={secRef} style={{
+      background: "#1a1a2e",
+      color: "#ffffff",
+      padding: "100px 0 48px",
+      position: "relative",
+    }}>
+      {/* Thin top accent */}
+      <div style={{
+        position: "absolute", top: 0, left: 40, right: 40,
+        height: 1, background: "rgba(255,255,255,0.08)",
+      }} />
 
-      <div className="container mx-auto px-6 relative z-10">
-        {/* Main content - Kept EXACTLY as your original */}
-        <div className="flex flex-col md:flex-row justify-between w-full max-w-6xl mb-12 mx-auto">
-          {/* Name - Left Aligned */}
-          <div className="text-center md:text-left mb-10 md:mb-0">
-            <h2 className="text-5xl md:text-6xl font-serif font-bold leading-none">
-              <span className="text-white">Sujal</span>
-              <br />
-              Thapa
-            </h2>
+      <div style={{ maxWidth: 1240, margin: "0 auto", padding: "0 40px" }}>
+
+        {/* Giant name — ZJ footer logo style */}
+        <div ref={bigRef} style={{ marginBottom: 80, opacity: 0 }}>
+          <h2 style={{
+            fontSize: "clamp(4rem,11vw,10rem)",
+            fontWeight: 200, letterSpacing: "-0.05em", lineHeight: 0.9,
+            color: "rgba(255,255,255,0.88)",
+            margin: 0,
+          }}>
+            Sujal<br />
+            <span style={{ color: "rgba(118,152,220,0.7)" }}>Thapa</span>
+          </h2>
+        </div>
+
+        {/* Middle row: links + social */}
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr 1fr",
+          gap: "3rem",
+          paddingBottom: 64,
+          borderBottom: "1px solid rgba(255,255,255,0.08)",
+        }} className="footer-grid">
+
+          {/* Explore */}
+          <div>
+            <p style={{
+              fontSize: 10, fontWeight: 500, letterSpacing: "0.14em",
+              textTransform: "uppercase", color: "rgba(255,255,255,0.35)", marginBottom: 20
+            }}>Explore</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              {[["About", "#about"], ["Works", "#projects"], ["Education", "#education"], ["Contact", "#contact"]].map(([t, h]) => (
+                <a key={t} href={h} style={{
+                  fontSize: 14, fontWeight: 300, color: "rgba(255,255,255,0.6)",
+                  textDecoration: "none", transition: "color .2s", letterSpacing: ".01em",
+                }}
+                  onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
+                  onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.6)")}>
+                  {t}
+                </a>
+              ))}
+            </div>
           </div>
 
-          {/* Contact + Social - Right Aligned */}
-          <div className="flex flex-col md:flex-row gap-12 text-center md:text-left">
-            {/* Contact */}
-            <div>
-              <h3 className="text-sm font-semibold uppercase tracking-wider mb-4 text-white ">
-                Contact
-              </h3>
-              <p className="text-sm text-white">sujalmangar304@gmail.com</p>
-              <p className="text-sm text-white">+91 9339271036</p>
-              <p className="text-sm text-white">Kalimpong, West Bengal</p>
+          {/* Contact */}
+          <div>
+            <p style={{
+              fontSize: 10, fontWeight: 500, letterSpacing: "0.14em",
+              textTransform: "uppercase", color: "rgba(255,255,255,0.35)", marginBottom: 20
+            }}>Contact</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {["sujalmangar304@gmail.com", "+91 9339271036", "Kalimpong, West Bengal"].map(v => (
+                <p key={v} style={{ fontSize: 13, fontWeight: 300, color: "rgba(255,255,255,0.55)", lineHeight: 1.5 }}>{v}</p>
+              ))}
             </div>
+          </div>
 
-            {/* Social */}
-            <div>
-              <h3 className="text-sm font-semibold uppercase tracking-wider mb-4 text-white ">
-                Social
-              </h3>
-              <div className="flex justify-center md:justify-start space-x-5">
-                <a
-                  href="https://www.linkedin.com/in/sujal-thapa-47880530b/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <FaLinkedinIn className="text-lg text-white hover:opacity-70 transition" />
+          {/* Social */}
+          <div>
+            <p style={{
+              fontSize: 10, fontWeight: 500, letterSpacing: "0.14em",
+              textTransform: "uppercase", color: "rgba(255,255,255,0.35)", marginBottom: 20
+            }}>Presence</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              {socials.map(({ href, Icon, label }) => (
+                <a key={href} href={href} target="_blank" rel="noreferrer" style={{
+                  display: "flex", alignItems: "center", gap: 10, textDecoration: "none",
+                  color: "rgba(255,255,255,0.55)", transition: "color .2s",
+                  fontSize: 13, fontWeight: 300,
+                }}
+                  onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
+                  onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.55)")}>
+                  <Icon style={{ fontSize: 14 }} />
+                  {label}
                 </a>
-                <a
-                  href="https://github.com/Sujal-Thapa1"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <FaGithub className="text-lg text-white hover:opacity-70 transition" />
-                </a>
-                <a
-                  href="https://www.instagram.com/be_uni.que__/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <FaInstagram className="text-lg text-white hover:opacity-70 transition" />
-                </a>
-                <a
-                  href="https://x.com/SujalThapa304"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <FaXTwitter className="text-lg text-white hover:opacity-70 transition" />
-                </a>
-              </div>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* Divider - Matches your original placement */}
-        <div className="w-full max-w-6xl border-t border-white/20 pt-6 text-center mx-auto">
-          <p className="text-sm text-white opacity-70">
-            © 2025 Sujal Thapa. All rights reserved.
+        {/* Bottom bar */}
+        <div style={{
+          display: "flex", justifyContent: "space-between", alignItems: "center",
+          paddingTop: 28, flexWrap: "wrap", gap: 12,
+        }}>
+          <p style={{ fontSize: 11, color: "rgba(255,255,255,0.28)", fontWeight: 400, letterSpacing: ".08em" }}>
+            © 2025 Sujal Thapa — All rights reserved
+          </p>
+          <p style={{ fontSize: 11, color: "rgba(255,255,255,0.28)", fontWeight: 400, letterSpacing: ".08em" }}>
+            Built with React · GSAP · Lenis
           </p>
         </div>
       </div>
+
+      <style>{`
+        @media(max-width:768px){ .footer-grid{ grid-template-columns:1fr !important; } }
+      `}</style>
     </footer>
   );
-};
-
-export default Footer;
+}

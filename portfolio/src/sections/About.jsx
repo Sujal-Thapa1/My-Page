@@ -1,140 +1,183 @@
-import React from "react";
-import { useInView } from "react-intersection-observer";
-import { motion } from "framer-motion";
-import about from "/public/images/about.jpeg";
-import { FaChess, FaLaptop, FaPlane } from "react-icons/fa";
+import React, { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-const About = () => {
-  const { ref, inView } = useInView({
-    triggerOnce: true,
-    threshold: 0.2,
-  });
+gsap.registerPlugin(ScrollTrigger);
 
-  const leftVariants = {
-    hidden: { x: -100, opacity: 0 },
-    visible: { x: 0, opacity: 1, transition: { duration: 0.5, delay: 0.2 } },
-  };
+/* ── ZJ stat item ── */
+const Stat = ({ value, label }) => (
+  <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
+    <span style={{
+      fontSize:"clamp(2rem,4vw,3.5rem)", fontWeight:200,
+      letterSpacing:"-0.04em", color:"#1a1a2e", lineHeight:1,
+    }}>{value}</span>
+    <span style={{ fontSize:12, fontWeight:500, letterSpacing:"0.1em",
+      textTransform:"uppercase", color:"#6b6e8a" }}>{label}</span>
+  </div>
+);
 
-  const rightVariants = {
-    hidden: { x: 100, opacity: 0 },
-    visible: { x: 0, opacity: 1, transition: { duration: 0.5, delay: 0.2 } },
-  };
+export default function About() {
+  const secRef    = useRef(null);
+  const labelRef  = useRef(null);
+  const h2Ref     = useRef(null);
+  const paraRef   = useRef(null);
+  const statsRef  = useRef(null);
+  const imgRef    = useRef(null);
+  const hrTop     = useRef(null);
+  const hrBottom  = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      /* Divider lines draw in */
+      [hrTop, hrBottom].forEach((r, i) =>
+        gsap.fromTo(r.current, { scaleX:0, transformOrigin:"left center" },
+          { scaleX:1, duration:1.4, delay:i*0.1, ease:"expo.out",
+            scrollTrigger:{ trigger:r.current, start:"top 90%", once:true } })
+      );
+
+      /* Label */
+      gsap.fromTo(labelRef.current,
+        { y:16, opacity:0 },
+        { y:0, opacity:1, duration:0.9, ease:"expo.out",
+          scrollTrigger:{ trigger:labelRef.current, start:"top 88%", once:true } });
+
+      /* Heading — clip reveal */
+      gsap.fromTo(h2Ref.current,
+        { clipPath:"inset(0 0 100% 0)", y:20, opacity:0 },
+        { clipPath:"inset(0 0 0% 0)", y:0, opacity:1,
+          duration:1.2, ease:"expo.out",
+          scrollTrigger:{ trigger:h2Ref.current, start:"top 86%", once:true } });
+
+      /* Paragraphs */
+      gsap.fromTo(paraRef.current.querySelectorAll("p"),
+        { y:32, opacity:0 },
+        { y:0, opacity:1, stagger:0.14, duration:1, ease:"expo.out",
+          scrollTrigger:{ trigger:paraRef.current, start:"top 85%", once:true } });
+
+      /* Stats */
+      gsap.fromTo(statsRef.current.querySelectorAll("div > span:first-child"),
+        { y:24, opacity:0 },
+        { y:0, opacity:1, stagger:0.1, duration:0.9, ease:"expo.out",
+          scrollTrigger:{ trigger:statsRef.current, start:"top 85%", once:true } });
+
+      /* Image */
+      gsap.fromTo(imgRef.current,
+        { scale:0.93, opacity:0, y:30 },
+        { scale:1, opacity:1, y:0, duration:1.4, ease:"expo.out",
+          scrollTrigger:{ trigger:imgRef.current, start:"top 86%", once:true } });
+    }, secRef.current);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <section id="about" className="py-40 bg-[#F6F1EB] text-gray-800">
-      <div
-        ref={ref}
-        className="container mx-auto px-6 flex flex-col items-center">
-        {/* SECTION TITLE WITH THICK LINES */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-          className="flex items-center justify-center mb-1 gap-4 w-full max-w-3xl">
-          <div className="flex-1 h-1 bg-gray-800"></div>
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold text-center">
-            ABOUT <span className="text-green-600">ME</span>
+    <section ref={secRef} id="about" style={{
+      background:"transparent", padding:"120px 0 0", minHeight:"100vh",
+    }}>
+      <hr ref={hrTop} style={{ border:"none",borderTop:"1px solid rgba(0,0,0,0.09)", margin:"0 40px", transform:"scaleX(0)" }} />
+
+      <div style={{
+        maxWidth:1240, margin:"0 auto", padding:"100px 40px 120px",
+      }}>
+        {/* Top row: label + heading */}
+        <div style={{
+          display:"grid", gridTemplateColumns:"220px 1fr",
+          gap:"4rem", marginBottom:80,
+          alignItems:"start",
+        }}>
+          <span ref={labelRef} className="zj-label" style={{
+            paddingTop:10, opacity:0,
+            fontSize:11, fontWeight:500, letterSpacing:"0.14em",
+            textTransform:"uppercase", color:"#6b6e8a",
+          }}>
+            About Me
+          </span>
+
+          <h2 ref={h2Ref} style={{
+            fontSize:"clamp(2.4rem,5.5vw,5rem)",
+            fontWeight:200, letterSpacing:"-0.04em",
+            lineHeight:1.08, color:"#1a1a2e",
+            opacity:0,
+          }}>
+            Building Software That<br />Matters
           </h2>
-          <div className="flex-1 h-1 bg-gray-800"></div>
-        </motion.div>
-
-        <motion.p
-          initial={{ opacity: 0, y: 50 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-center text-gray-500 mb-16 italic max-w-2xl">
-          ALLOW ME TO INTRODUCE MYSELF.
-        </motion.p>
-
-        {/* IMAGE LEFT, TEXT RIGHT */}
-        <div className="flex flex-col md:flex-row items-start gap-30 max-w-4xl w-full">
-          {/* IMAGE */}
-          <motion.div
-            variants={leftVariants}
-            initial="hidden"
-            animate={inView ? "visible" : "hidden"}
-            className="md:w-1/3 flex flex-col items-center md:items-start">
-            <span className="text-green-600 italic font-medium mb-2">
-              That's me →
-            </span>
-            <img
-              src={about}
-              alt="Sujal Thapa"
-              className="w-90 h-60 object-cover shadow-xl transform rotate-3"
-            />
-          </motion.div>
-
-          {/* TEXT */}
-          <motion.div
-            variants={rightVariants}
-            initial="hidden"
-            animate={inView ? "visible" : "hidden"}
-            className="md:w-2/3 text-left">
-            <p className="text-lg leading-relaxed text-gray-600 mb-6">
-              I am a Computer Science student with a strong interest in Cloud
-              Computing and Full-Stack Development. Alongside this, I am
-              actively learning Artificial Intelligence, Data Structures &
-              Algorithms in Java, and System Design to build a solid foundation
-              in scalable software engineering.
-            </p>
-
-            <h3 className="text-2xl font-serif font-semibold text-gray-800 mb-4">
-              Career Objective
-            </h3>
-
-            <p className="text-lg leading-relaxed text-gray-600">
-              To apply my academic knowledge in real-world environments, gain
-              practical experience, and continuously grow into a skilled
-              software professional through hands-on projects and lifelong
-              learning.
-            </p>
-          </motion.div>
         </div>
 
-        {/* THINGS I LOVE & LOOK WHAT I CAN DO */}
-        <div className="flex flex-col md:flex-row justify-center gap-16 mt-16 max-w-4xl w-full">
-          {/* THINGS I LOVE */}
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="md:w-1/2 text-left">
-            <h4 className="text-xl font-semibold mb-4">THINGS I LOVE</h4>
-            <div className="flex gap-4 text-3xl">
-              <FaChess className="text-gray-700 hover:text-blue-500 transition-colors duration-300 cursor-pointer" />
-              <FaLaptop className="text-gray-700 hover:text-blue-500 transition-colors duration-300 cursor-pointer" />
-              <FaPlane className="hover:text-blue-500 transition-colors duration-300 cursor-pointer" />
-            </div>
-          </motion.div>
+        {/* Content grid: text left, image right */}
+        <div style={{
+          display:"grid",
+          gridTemplateColumns:"1fr 1fr",
+          gap:"6rem",
+          alignItems:"start",
+        }} className="about-grid">
 
-          {/* LOOK WHAT I CAN DO */}
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.6 }}
-            className="md:w-1/2 text-left">
-            <h4 className="text-xl font-semibold mb-4">LOOK WHAT I CAN DO</h4>
-            <div className="flex">
-              <ul className="space-y-2 text-gray-700 w-1/2">
-                <li className="hover:text-blue-500 transition-colors duration-200">
-                  + Web Design
-                </li>
-                <li className="hover:text-blue-500 transition-colors duration-200">
-                  + Basic System Design
-                </li>
-                <li className="hover:text-blue-500 transition-colors duration-200">
-                  + Hosting
-                </li>
-                <li className="hover:text-blue-500 transition-colors duration-200">
-                  + Backend Development
-                </li>
-              </ul>
+          {/* Left: paragraphs + stats */}
+          <div>
+            <div ref={paraRef} style={{ display:"flex", flexDirection:"column", gap:24, marginBottom:60 }}>
+              <p style={{
+                fontSize:"clamp(1rem,1.3vw,1.15rem)",
+                fontWeight:300, color:"#4a4c6a", lineHeight:1.75,
+              }}>
+                I'm <strong style={{ fontWeight:500, color:"#1a1a2e" }}>Sujal Thapa</strong>, a
+                Full-Stack Developer and BCA student specialising in Cloud Computing &amp; Information Security
+                at Medhavi Skills University, Kalimpong, West Bengal.
+              </p>
+              <p style={{
+                fontSize:"clamp(0.9rem,1.15vw,1.05rem)",
+                fontWeight:300, color:"#6b6e8a", lineHeight:1.75,
+              }}>
+                I'm passionate about crafting performant, beautifully-designed web applications —
+                from responsive frontends to robust backend APIs. My goal is to ship software that
+                solves real problems, is accessible to everyone, and is a joy to use.
+              </p>
+              <p style={{
+                fontSize:"clamp(0.9rem,1.15vw,1.05rem)",
+                fontWeight:300, color:"#6b6e8a", lineHeight:1.75,
+              }}>
+                When I'm not coding, I'm exploring emerging tech in AI/ML, contributing to open-source,
+                and building side projects that challenge my problem-solving skills.
+              </p>
             </div>
-          </motion.div>
+
+            {/* Stats row */}
+            <div ref={statsRef} style={{
+              display:"flex", gap:"3rem", flexWrap:"wrap",
+              paddingTop:48,
+              borderTop:"1px solid rgba(0,0,0,0.09)",
+            }}>
+              <Stat value="3+" label="Years Learning" />
+              <Stat value="5+" label="Projects Built" />
+              <Stat value="12+" label="Technologies" />
+              <Stat value="2+" label="Team Collab" />
+            </div>
+          </div>
+
+          {/* Right: Photo */}
+          <div ref={imgRef} style={{
+            borderRadius:20, overflow:"hidden",
+            background:"#e8e8ee",
+            aspectRatio:"4/5",
+            opacity:0,
+            boxShadow:"0 32px 64px rgba(0,0,0,0.08)",
+          }}>
+            <img
+              src="/images/profile.png"
+              alt="Sujal Thapa"
+              style={{
+                width:"100%", height:"100%",
+                objectFit:"cover", objectPosition:"top center",
+                display:"block",
+              }}
+            />
+          </div>
         </div>
       </div>
+
+      <hr ref={hrBottom} style={{ border:"none",borderTop:"1px solid rgba(0,0,0,0.09)", margin:"0 40px", transform:"scaleX(0)" }} />
+
+      <style>{`
+        @media(max-width:768px){ .about-grid{ grid-template-columns:1fr !important; gap:3rem !important; } }
+      `}</style>
     </section>
   );
-};
-
-export default About;
+}
