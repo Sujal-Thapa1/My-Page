@@ -85,34 +85,29 @@ export default function App() {
   const [footerHeight, setFooterHeight] = useState(400);
   const [expHeight, setExpHeight] = useState(1000); // Dynamic Experience height!
 
-  // Measure actual footer height
-  useLayoutEffect(() => {
-    if (!footerWrapRef.current) return;
-    const ro = new ResizeObserver((entries) => {
-      for (let entry of entries) {
-        setFooterHeight(entry.contentRect.height);
-      }
-      ScrollTrigger.refresh();
-    });
-    ro.observe(footerWrapRef.current);
-    return () => ro.disconnect();
-  }, []);
+  const [isMobile, setIsMobile] = useState(false);
 
-  // Measure actual experience height
-  useLayoutEffect(() => {
-    if (!expWrapRef.current) return;
-    const ro = new ResizeObserver((entries) => {
-      for (let entry of entries) {
-        setExpHeight(entry.contentRect.height);
-      }
-      ScrollTrigger.refresh();
-    });
-    ro.observe(expWrapRef.current);
-    return () => ro.disconnect();
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
   }, []);
 
   useEffect(() => {
-    if (!footerInnerRef.current || !spacerRef.current || !expInnerRef.current || !expSpacerRef.current) return;
+    if (!expWrapRef.current || !footerWrapRef.current) return;
+    const ro = new ResizeObserver(() => {
+      setExpHeight(expWrapRef.current.getBoundingClientRect().height);
+      setFooterHeight(footerWrapRef.current.getBoundingClientRect().height);
+      ScrollTrigger.refresh();
+    });
+    ro.observe(footerWrapRef.current);
+    ro.observe(expWrapRef.current);
+    return () => ro.disconnect();
+  }, [isMobile]); // Re-measure if mobile state changes
+
+  useEffect(() => {
+    if (!footerInnerRef.current || !spacerRef.current || !expInnerRef.current || !expSpacerRef.current || isMobile) return;
 
     // ── FOOTER PARALLAX & TALL-FOOTER SCROLL FIX ──
     const overflowFoot = Math.max(0, footerHeight - window.innerHeight);
@@ -152,7 +147,7 @@ export default function App() {
       },
     });
 
-    // 3. Hide Experience when it is completely covered by Education so it doesn't block the Footer!
+    // 3. Hide Experience when it is completely covered by Education
     const stExpVisibility = ScrollTrigger.create({
       trigger: expSpacerRef.current,
       start: "bottom top", 
@@ -172,48 +167,35 @@ export default function App() {
 
   return (
     <>
-      {/* ── FIXED EXPERIENCE UNDER-LAYER ── */}
-      <div
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          zIndex: 1, // Above footer but below main content
-          height: "100vh",
-          overflow: "visible", // Prevent bleeding if possible? We will use a wrapper.
-          pointerEvents: "none", // Prevent capturing clicks when covered
-        }}
-      >
-        <div 
-          ref={expInnerRef} 
-          style={{ width: "100%", pointerEvents: "auto", willChange: "transform", borderRadius: "24px 24px 0 0", overflow: "hidden", background: "#0f0f11", color: "#ffffff" }}
+      {/* ── FIXED EXPERIENCE UNDER-LAYER (DESKTOP) ── */}
+      {!isMobile && (
+        <div
+          style={{
+            position: "fixed", top: 0, left: 0, width: "100%", zIndex: 1, height: "100vh", overflow: "visible", pointerEvents: "none",
+          }}
         >
-          <div ref={expWrapRef}>
-            <Experience />
+          <div ref={expInnerRef} style={{ width: "100%", pointerEvents: "auto", willChange: "transform", borderRadius: "24px 24px 0 0", overflow: "hidden", background: "#0f0f11", color: "#ffffff" }}>
+            <div ref={expWrapRef}>
+              <Experience />
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
-      {/* ── FIXED FOOTER ── */}
-      <div
-        style={{
-          position: "fixed",
-          bottom: 0,
-          left: 0,
-          width: "100%",
-          zIndex: 0, // Behind EVERYTHING
-          background: "#1a1a2e",
-          height: footerHeight,
-          overflow: "hidden",
-        }}
-      >
-        <div ref={footerWrapRef}>
-          <div ref={footerInnerRef} style={{ transform: "translateY(40px)" }}>
-            <Footer />
+      {/* ── FIXED FOOTER (DESKTOP) ── */}
+      {!isMobile && (
+        <div
+          style={{
+            position: "fixed", bottom: 0, left: 0, width: "100%", zIndex: 0, background: "#1a1a2e", height: footerHeight, overflow: "hidden",
+          }}
+        >
+          <div ref={footerWrapRef}>
+            <div ref={footerInnerRef} style={{ transform: "translateY(40px)" }}>
+              <Footer />
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* ── MAIN SCROLLING CONTENT FLOW ── */}
       <div style={{ position: "relative", zIndex: 2, fontFamily: "'Inter','Helvetica Neue',Arial,sans-serif", color: "#1a1a2e", background: "transparent" }}>
@@ -235,16 +217,22 @@ export default function App() {
           ))}
         </div>
 
-        {/* ── EXPERIENCE SPACER ── */}
-        <div
-          ref={expSpacerRef}
-          id="experience" // For navbar scroll anchor!
-          style={{
-            height: Math.max(window.innerHeight, expHeight), // Minimum 100vh, expanding to fit actual content!
-            background: "transparent",
-            pointerEvents: "none",
-          }}
-        />
+        {/* ── EXPERIENCE SPACER / NATIVE EXP BLOCK ── */}
+        {!isMobile ? (
+          <div
+            ref={expSpacerRef}
+            id="experience" // For navbar scroll anchor!
+            style={{
+              height: Math.max(window.innerHeight, expHeight), // Minimum 100vh, expanding to fit actual content!
+              background: "transparent",
+              pointerEvents: "none",
+            }}
+          />
+        ) : (
+          <div id="experience" style={{ position: "relative", zIndex: 10, background: "#0f0f11", color: "#ffffff", borderRadius: "24px 24px 0 0", overflow: "hidden" }}>
+            <div ref={expWrapRef}><Experience /></div>
+          </div>
+        )}
 
         {/* GROUP 2: Slides UP covering Experience, ultimately revealing Footer */}
         <div style={{ position: "relative", zIndex: 20 }}>
@@ -261,8 +249,14 @@ export default function App() {
           ))}
         </div>
 
-        {/* ── FOOTER SPACER ── */}
-        <div ref={spacerRef} style={{ height: footerHeight, background: "transparent", pointerEvents: "none" }} />
+        {/* ── FOOTER SPACER / NATIVE FOOTER BLOCK ── */}
+        {!isMobile ? (
+          <div ref={spacerRef} style={{ height: footerHeight, background: "transparent", pointerEvents: "none" }} />
+        ) : (
+          <div style={{ position: "relative", zIndex: 10, background: "#1a1a2e" }}>
+            <div ref={footerWrapRef}><Footer /></div>
+          </div>
+        )}
       </div>
     </>
   );
