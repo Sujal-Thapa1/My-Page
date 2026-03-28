@@ -17,8 +17,36 @@ document.addEventListener('mousemove', onMove);
   requestAnimationFrame(tick); })();
 
 const hoverable = 'a,button,[role="button"],input,textarea,select,label,[data-cursor]';
-document.addEventListener('mouseover', e => { if(e.target.closest(hoverable)){ ring.classList.add('big'); dot.style.transform='translate(-50%,-50%) scale(2)'; }});
-document.addEventListener('mouseout',  e => { if(e.target.closest(hoverable)){ ring.classList.remove('big'); dot.style.transform='translate(-50%,-50%) scale(1)'; }});
+document.addEventListener('mouseover', e => { 
+  const el = e.target.closest(hoverable);
+  if(el){ 
+    ring.classList.add('big'); 
+    dot.style.transform='translate(-50%,-50%) scale(2)'; 
+    if(el.getAttribute('data-cursor') === 'drag') {
+      ring.innerHTML = '<span style="font-size:10px;font-weight:600;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);letter-spacing:1px;color:#fff;">DRAG</span>';
+      ring.style.background = 'rgba(255,255,255,0.1)';
+      ring.style.border = 'none';
+      ring.style.width = '64px';
+      ring.style.height = '64px';
+      dot.style.opacity = '0';
+    }
+  }
+});
+document.addEventListener('mouseout',  e => { 
+  const el = e.target.closest(hoverable);
+  if(el){ 
+    ring.classList.remove('big'); 
+    dot.style.transform='translate(-50%,-50%) scale(1)'; 
+    if(el.getAttribute('data-cursor') === 'drag') {
+      ring.innerHTML = '';
+      ring.style.background = 'transparent';
+      ring.style.border = '1.5px solid rgba(255, 255, 255, 0.8)';
+      ring.style.width = '';
+      ring.style.height = '';
+      if(!document.hidden) dot.style.opacity = '1';
+    }
+  }
+});
 document.addEventListener('mouseleave',()=>{ dot.style.opacity='0'; ring.style.opacity='0'; });
 document.addEventListener('mouseenter',()=>{ dot.style.opacity='1'; ring.style.opacity='1'; });
 

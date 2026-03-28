@@ -127,7 +127,7 @@ export default function Skills() {
   const half = Math.ceil(skills.length / 2);
 
   return (
-    <section ref={secRef} id="skills" style={{ background: "transparent", padding: "120px 0", minHeight: "100vh" }}>
+    <section ref={secRef} style={{ background: "transparent", padding: "120px 0", minHeight: "100vh" }}>
       <div style={{ maxWidth: 1240, margin: "0 auto", padding: "0 40px" }}>
 
         {/* Header */}

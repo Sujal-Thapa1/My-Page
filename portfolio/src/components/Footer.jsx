@@ -74,11 +74,28 @@ export default function Footer() {
               fontSize: 10, fontWeight: 500, letterSpacing: "0.14em",
               textTransform: "uppercase", color: "rgba(255,255,255,0.35)", marginBottom: 20
             }}>Explore</p>
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              {[["About", "#about"], ["Works", "#projects"], ["Education", "#education"], ["Contact", "#contact"]].map(([t, h]) => (
-                <a key={t} href={h} style={{
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", rowGap: "10px", columnGap: "32px" }}>
+              {[
+                ["Home", "#home"],
+                ["About", "#about"],
+                ["Skills", "#skills"],
+                ["Experience", "#experience"],
+                ["Education", "#education"],
+                ["Projects", "#projects"],
+                ["Contact", "#contact"],
+              ].map(([t, h]) => (
+                <a key={t} href={h} onClick={(e) => {
+                  e.preventDefault();
+                  if (window.lenis) {
+                    window.lenis.scrollTo(h, { offset: 0, duration: 1.5, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+                  } else {
+                    const target = document.querySelector(h);
+                    if (target) target.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }} style={{
                   fontSize: 14, fontWeight: 300, color: "rgba(255,255,255,0.6)",
                   textDecoration: "none", transition: "color .2s", letterSpacing: ".01em",
+                  cursor: "pointer",
                 }}
                   onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
                   onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.6)")}>

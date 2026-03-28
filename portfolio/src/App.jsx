@@ -16,39 +16,38 @@ gsap.registerPlugin(ScrollTrigger);
 
 // ─── Regular Stackable Sections ───
 const SECTIONS_GROUP_1 = [
-  { id: "about",      Component: About,      bg: "#F5F5F7", color: "#1a1a2e" },
-  { id: "skills",     Component: Skills,     bg: "#FFFFFF", color: "#1a1a2e" },
+  { id: "about", Component: About, bg: "#F5F5F7", color: "#1a1a2e" },
+  { id: "skills", Component: Skills, bg: "#FFFFFF", color: "#1a1a2e" },
 ];
 
 const SECTIONS_GROUP_2 = [
-  { id: "education",  Component: Education,  bg: "#F5F5F7", color: "#1a1a2e" },
-  { id: "projects",   Component: Projects,   bg: "#0f0f11", color: "#ffffff" },
-  { id: "contact",    Component: Contact,    bg: "#FFFFFF", color: "#1a1a2e" },
+  { id: "education", Component: Education, bg: "#F5F5F7", color: "#1a1a2e" },
+  { id: "projects", Component: Projects, bg: "#0f0f11", color: "#ffffff" },
+  { id: "contact", Component: Contact, bg: "#FFFFFF", color: "#1a1a2e" },
 ];
 
 // ─── Individual stacked card component ───
-function StackCard({ Component, bg, color, index, total, sectionId }) {
+function StackCard({ Component, bg, color, index, sectionId, isLastCard }) {
   const wrapRef = useRef(null);
   const cardRef = useRef(null);
-  const isLast = index === total - 1;
 
   useEffect(() => {
     const wrap = wrapRef.current;
     const card = cardRef.current;
-    if (!wrap || !card || isLast) return;
+    if (!wrap || !card || isLastCard) return;
 
     const stPin = ScrollTrigger.create({
       trigger: wrap,
-      start: "bottom bottom", 
-      end: "+=100vh",       
+      start: "bottom bottom",
+      end: "+=100vh",
       pin: card,
-      pinSpacing: false,    
+      pinSpacing: false,
     });
 
     return () => {
       stPin.kill();
     }
-  }, [isLast]);
+  }, [isLastCard]);
 
   return (
     <div id={sectionId} ref={wrapRef} style={{ position: "relative", zIndex: 10 + index }}>
@@ -77,7 +76,7 @@ export default function App() {
   const footerInnerRef = useRef(null);
   const footerWrapRef = useRef(null);
   const spacerRef = useRef(null);
-  
+
   const expInnerRef = useRef(null);
   const expWrapRef = useRef(null);
   const expSpacerRef = useRef(null);
@@ -96,14 +95,25 @@ export default function App() {
 
   useEffect(() => {
     if (!expWrapRef.current || !footerWrapRef.current) return;
+    
+    let timer;
     const ro = new ResizeObserver(() => {
-      setExpHeight(expWrapRef.current.getBoundingClientRect().height);
-      setFooterHeight(footerWrapRef.current.getBoundingClientRect().height);
-      ScrollTrigger.refresh();
+      // Debounce the refresh to prevent pinning "bounce" issues during intense resizes / native scrollbar hiding
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        setExpHeight(expWrapRef.current.getBoundingClientRect().height);
+        setFooterHeight(footerWrapRef.current.getBoundingClientRect().height);
+        ScrollTrigger.refresh();
+      }, 150);
     });
+    
     ro.observe(footerWrapRef.current);
     ro.observe(expWrapRef.current);
-    return () => ro.disconnect();
+    
+    return () => {
+      clearTimeout(timer);
+      ro.disconnect();
+    };
   }, [isMobile]); // Re-measure if mobile state changes
 
   useEffect(() => {
@@ -136,8 +146,8 @@ export default function App() {
 
     const stExpScroll = ScrollTrigger.create({
       trigger: expSpacerRef.current,
-      start: "top top", // When Skills has just completely departed the screen
-      end: "bottom bottom", // Until the bottom of the spacer (which requires scrolling the overflow amount)
+      start: "top top", 
+      end: "bottom bottom",
       scrub: true,
       onUpdate(self) {
         // Linearly translate up to simulate perfect native scrolling of the tall content
@@ -150,7 +160,7 @@ export default function App() {
     // 3. Hide Experience when it is completely covered by Education
     const stExpVisibility = ScrollTrigger.create({
       trigger: expSpacerRef.current,
-      start: "bottom top", 
+      start: "bottom top",
       onEnter: () => gsap.set(expInnerRef.current, { visibility: "hidden" }),
       onLeaveBack: () => gsap.set(expInnerRef.current, { visibility: "visible" })
     });
@@ -167,6 +177,7 @@ export default function App() {
 
   return (
     <>
+      <Navbar />
       {/* ── FIXED EXPERIENCE UNDER-LAYER (DESKTOP) ── */}
       {!isMobile && (
         <div
@@ -198,21 +209,20 @@ export default function App() {
       )}
 
       {/* ── MAIN SCROLLING CONTENT FLOW ── */}
-      <div style={{ position: "relative", zIndex: 2, fontFamily: "'Inter','Helvetica Neue',Arial,sans-serif", color: "#1a1a2e", background: "transparent" }}>
-        
+      <div style={{ position: "relative", zIndex: 2, fontFamily: "'Inter','Helvetica Neue',Arial,sans-serif", color: "#1a1a2e", background: "transparent", pointerEvents: "none" }}>
+
         {/* GROUP 1: Slides UP revealing Experience */}
-        <div style={{ background: "#F8E8D5", position: "relative", zIndex: 10 }}>
-          <Navbar />
+        <div style={{ background: "#F8E8D5", position: "relative", zIndex: 10, pointerEvents: "auto" }}>
           <Hero />
           {SECTIONS_GROUP_1.map(({ id, Component, bg, color }, i) => (
             <StackCard
-              key={"g1-"+i}
+              key={"g1-" + i}
               sectionId={id}
               Component={Component}
               bg={bg}
               color={color}
               index={i}
-              total={SECTIONS_GROUP_1.length}
+              isLastCard={true} // Disabled overstacking pinning for Group 1 
             />
           ))}
         </div>
@@ -235,16 +245,16 @@ export default function App() {
         )}
 
         {/* GROUP 2: Slides UP covering Experience, ultimately revealing Footer */}
-        <div style={{ position: "relative", zIndex: 20 }}>
+        <div style={{ position: "relative", zIndex: 20, pointerEvents: "auto" }}>
           {SECTIONS_GROUP_2.map(({ id, Component, bg, color }, i) => (
             <StackCard
-              key={"g2-"+i}
+              key={"g2-" + i}
               sectionId={id}
               Component={Component}
               bg={bg}
               color={color}
               index={i + SECTIONS_GROUP_1.length + 1}
-              total={SECTIONS_GROUP_2.length}
+              isLastCard={i === SECTIONS_GROUP_2.length - 1}
             />
           ))}
         </div>

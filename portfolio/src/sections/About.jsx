@@ -85,7 +85,7 @@ export default function About() {
   }, []);
 
   return (
-    <section ref={secRef} id="about" style={{
+    <section ref={secRef} style={{
       background: "transparent", padding: "120px 0 0", minHeight: "100vh",
     }}>
       <hr ref={hrTop} style={{ border: "none", borderTop: "1px solid rgba(0,0,0,0.09)", margin: "0 40px", transform: "scaleX(0)" }} />
@@ -132,24 +132,20 @@ export default function About() {
                 fontSize: "clamp(1rem,1.3vw,1.15rem)",
                 fontWeight: 300, color: "#4a4c6a", lineHeight: 1.75,
               }}>
-                I'm <strong style={{ fontWeight: 500, color: "#1a1a2e" }}>Sujal Thapa</strong>, a
-                Full-Stack Developer and BCA student specialising in Cloud Computing &amp; Information Security
-                at Medhavi Skills University, Kalimpong, West Bengal.
+                I’m a passionate tech enthusiast with a strong interest in cloud computing, AI-driven applications, and web automation. I enjoy learning and working with modern technologies to build scalable, efficient, and impactful solutions.
               </p>
               <p style={{
                 fontSize: "clamp(0.9rem,1.15vw,1.05rem)",
                 fontWeight: 300, color: "#6b6e8a", lineHeight: 1.75,
               }}>
-                I'm passionate about crafting performant, beautifully-designed web applications —
-                from responsive frontends to robust backend APIs. My goal is to ship software that
-                solves real problems, is accessible to everyone, and is a joy to use.
+                I focus on continuous learning and hands-on development, aiming to create intelligent systems that solve real-world problems and deliver meaningful user experiences.
               </p>
               <p style={{
                 fontSize: "clamp(0.9rem,1.15vw,1.05rem)",
                 fontWeight: 300, color: "#6b6e8a", lineHeight: 1.75,
               }}>
-                When I'm not coding, I'm exploring emerging tech in AI/ML, contributing to open-source,
-                and building side projects that challenge my problem-solving skills.
+                My long-term vision is to become a versatile developer capable of building end-to-end intelligent systems
+                that combine software engineering, automation, and AI to solve real-world problems at scale.
               </p>
             </div>
 

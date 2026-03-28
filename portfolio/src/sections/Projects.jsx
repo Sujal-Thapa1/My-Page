@@ -221,7 +221,6 @@ export default function Projects() {
   return (
     <section
       ref={secRef}
-      id="projects"
       style={{
         background: "transparent",   /* StackCard wrapper provides #0f0f11 bg */
         padding: "120px 0 100px",
@@ -325,6 +324,7 @@ export default function Projects() {
         {/* Embla viewport — full bleed like ZJ */}
         <div
           ref={emblaRef}
+          data-cursor="drag"
           style={{ overflow: "hidden", paddingLeft: 40 }}
         >
           <div style={{
