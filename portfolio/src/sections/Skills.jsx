@@ -5,7 +5,7 @@ import {
   FaHtml5, FaCss3Alt, FaJsSquare, FaReact, FaNodeJs, FaGithub, FaCloud,
 } from "react-icons/fa";
 import { SiTailwindcss, SiExpress, SiMysql, SiPostman } from "react-icons/si";
-import { SiDocker, SiPostgresql, SiMongodb, SiDart } from "react-icons/si";
+import { SiDocker, SiPostgresql, SiMongodb, SiDart, SiFlutter } from "react-icons/si";
 import { FaLinux, FaPython } from "react-icons/fa";
 import { FaProjectDiagram } from "react-icons/fa";
 
@@ -23,14 +23,14 @@ const skills = [
   { name: "MongoDB", Icon: SiMongodb, color: "#47A248", pct: 65 },
   { name: "GitHub", Icon: FaGithub, color: "#1a1a2e", pct: 80 },
   { name: "Postman", Icon: SiPostman, color: "#FF6C37", pct: 70 },
-  { name: "AWS", Icon: FaCloud, color: "#FF9900", pct: 55 },
+  { name: "AWS", Icon: FaCloud, color: "#FF9900", pct: 35 },
   { name: "n8n", Icon: FaProjectDiagram, color: "#EA4B71", pct: 60 },
   { name: "Docker", Icon: SiDocker, color: "#2496ED", pct: 50 },
   { name: "Linux", Icon: FaLinux, color: "#FCC624", pct: 75 },
   { name: "PostgreSQL", Icon: SiPostgresql, color: "#4169E1", pct: 50 },
   { name: "Dart", Icon: SiDart, color: "#0175C2", pct: 50 },
   { name: "Python", Icon: FaPython, color: "#3776AB", pct: 70 },
-
+  { name: "Flutter", Icon: SiFlutter, color: "#02569B", pct: 60 }
 ];
 
 /* Each skill row — ZJ's horizontal bar style */

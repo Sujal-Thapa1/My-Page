@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaLinkedinIn, FaGithub, FaInstagram, FaXTwitter } from "react-icons/fa6";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -15,6 +16,7 @@ const socials = [
 export default function Footer() {
   const secRef = useRef(null);
   const bigRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -83,14 +85,41 @@ export default function Footer() {
                 ["Education", "#education"],
                 ["Projects", "#projects"],
                 ["Contact", "#contact"],
+                ["Blog", "/blog"],
               ].map(([t, h]) => (
                 <a key={t} href={h} onClick={(e) => {
                   e.preventDefault();
-                  if (window.lenis) {
-                    window.lenis.scrollTo(h, { offset: 0, duration: 1.5, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+
+                  /* ── absolute path links (e.g. /blog) ── */
+                  if (h.startsWith('/')) {
+                    navigate(h);
+                    window.scrollTo(0, 0);
+                    return;
+                  }
+
+                  /* ── hash links: if already on home, smooth scroll ── */
+                  const onHome = window.location.pathname === '/';
+                  if (onHome) {
+                    if (window.lenis) {
+                      window.lenis.scrollTo(h, { offset: 0, duration: 1.5, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+                    } else {
+                      const target = document.querySelector(h);
+                      if (target) target.scrollIntoView({ behavior: 'smooth' });
+                    }
                   } else {
-                    const target = document.querySelector(h);
-                    if (target) target.scrollIntoView({ behavior: 'smooth' });
+                    /* ── on blog pages: navigate to home then scroll ── */
+                    navigate('/');
+                    /* Wait for React Router + paint, then scroll */
+                    setTimeout(() => {
+                      const el = document.querySelector(h);
+                      if (el) {
+                        if (window.lenis) {
+                          window.lenis.scrollTo(el, { offset: 0, duration: 1.2 });
+                        } else {
+                          el.scrollIntoView({ behavior: 'smooth' });
+                        }
+                      }
+                    }, 350);
                   }
                 }} style={{
                   fontSize: 14, fontWeight: 300, color: "rgba(255,255,255,0.6)",

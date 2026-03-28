@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { gsap } from "gsap";
 
 /* ── ZJ letter-by-letter hover ── */
-const ZJLink = ({ text, href, active, dark }) => {
+const ZJLink = ({ text, href, active, dark, navigate }) => {
   const ref = useRef(null);
 
   const onEnter = () => {
@@ -21,11 +22,29 @@ const ZJLink = ({ text, href, active, dark }) => {
 
   const onClick = (e) => {
     e.preventDefault();
-    if (window.lenis) {
-      window.lenis.scrollTo(href, { offset: 0, duration: 1.5, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+    /* absolute routes like /blog */
+    if (href.startsWith('/')) {
+      navigate(href);
+      window.scrollTo(0, 0);
+      return;
+    }
+    /* hash links — scroll if on home, navigate+scroll if on blog */
+    const onHome = window.location.pathname === '/';
+    if (onHome) {
+      if (window.lenis) {
+        window.lenis.scrollTo(href, { offset: 0, duration: 1.5, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+      } else {
+        const target = document.querySelector(href);
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+      }
     } else {
-      const target = document.querySelector(href);
-      if (target) target.scrollIntoView({ behavior: 'smooth' });
+      navigate('/');
+      setTimeout(() => {
+        const el = document.querySelector(href);
+        if (!el) return;
+        if (window.lenis) window.lenis.scrollTo(el, { offset: 0, duration: 1.2 });
+        else el.scrollIntoView({ behavior: 'smooth' });
+      }, 350);
     }
   };
 
@@ -56,18 +75,29 @@ const ZJLink = ({ text, href, active, dark }) => {
   );
 };
 
-const LINKS = [
-  { id:"home",       title:"Home" },
-  { id:"about",      title:"About" },
-  { id:"skills",     title:"Skills" },
-  { id:"experience", title:"Experience" },
-  { id:"education",  title:"Education" },
-  { id:"projects",   title:"Projects" },
-  { id:"contact",    title:"Contact" },
+const PORTFOLIO_LINKS = [
+  { id:"home",       title:"Home",       href:"#home" },
+  { id:"about",      title:"About",      href:"#about" },
+  { id:"skills",     title:"Skills",     href:"#skills" },
+  { id:"experience", title:"Experience", href:"#experience" },
+  { id:"education",  title:"Education",  href:"#education" },
+  { id:"projects",   title:"Projects",   href:"#projects" },
+  { id:"contact",    title:"Contact",    href:"#contact" },
+  { id:"blog",       title:"Blog",       href:"/blog" },
+];
+
+const BLOG_LINKS = [
+  { id:"home",     title:"← Portfolio", href:"/" },
+  { id:"blog-top", title:"Blog",        href:"#blog-top" },
 ];
 
 export default function Navbar() {
-  const [active, setActive]   = useState("home");
+  const location = useLocation();
+  const navigate  = useNavigate();
+  const isOnBlog  = location.pathname.startsWith('/blog');
+  const LINKS = isOnBlog ? BLOG_LINKS : PORTFOLIO_LINKS;
+
+  const [active, setActive]   = useState(isOnBlog ? "blog-top" : "home");
   const [pastHero, setPast]   = useState(false);
   const [scrolled, setScroll] = useState(false);
   const [open, setOpen]       = useState(false);
@@ -88,8 +118,9 @@ export default function Navbar() {
       setScroll(y > 30);
       setPast(y > vh * .82);
 
-      let cur = "home";
+      let cur = isOnBlog ? "blog-top" : "home";
       for (const l of LINKS) {
+        if (!l.href.startsWith('#')) continue;
         const el = document.getElementById(l.id);
         if (el && el.getBoundingClientRect().top <= 90) cur = l.id;
       }
@@ -157,22 +188,39 @@ export default function Navbar() {
             flex:1, justifyContent:"center",
           }} className="zj-desk-links">
             {LINKS.map(l => (
-              <ZJLink key={l.id} text={l.title} href={`#${l.id}`}
-                active={active===l.id} dark={dark} />
+              <ZJLink key={l.id} text={l.title} href={l.href}
+                active={active===l.id} dark={dark} navigate={navigate} />
             ))}
           </div>
 
           {/* Get in Touch CTA */}
-          <a href="#contact" style={{
-            flexShrink:0,
-            padding:"9px 20px",
-            background:ctaBg, color:ctaColor, border:ctaBorder,
-            borderRadius:7, fontSize:13, fontWeight:500,
-            fontFamily:"'Inter','Helvetica Neue',sans-serif",
-            textDecoration:"none",
-            letterSpacing:".01em",
-            transition:"background .35s, color .35s, box-shadow .25s",
-          }}
+          <a href="#contact"
+            onClick={(e) => {
+              e.preventDefault();
+              if (window.location.pathname === '/') {
+                if (window.lenis) window.lenis.scrollTo('#contact', { offset: 0, duration: 1.5 });
+                else document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
+              } else {
+                navigate('/');
+                setTimeout(() => {
+                  const el = document.querySelector('#contact');
+                  if (!el) return;
+                  if (window.lenis) window.lenis.scrollTo(el, { offset: 0, duration: 1.2 });
+                  else el.scrollIntoView({ behavior: 'smooth' });
+                }, 350);
+              }
+            }}
+            style={{
+              flexShrink:0,
+              padding:"9px 20px",
+              background:ctaBg, color:ctaColor, border:ctaBorder,
+              borderRadius:7, fontSize:13, fontWeight:500,
+              fontFamily:"'Inter','Helvetica Neue',sans-serif",
+              textDecoration:"none",
+              letterSpacing:".01em",
+              cursor:"pointer",
+              transition:"background .35s, color .35s, box-shadow .25s",
+            }}
             onMouseEnter={e => { e.currentTarget.style.boxShadow="0 4px 24px rgba(0,0,0,0.12)"; }}
             onMouseLeave={e => { e.currentTarget.style.boxShadow="none"; }}>
             Get in Touch
@@ -207,7 +255,14 @@ export default function Navbar() {
         transition:"transform .45s cubic-bezier(.4,0,.2,1)",
       }} className="zj-mob-menu">
         {LINKS.map((l,i) => (
-          <a key={l.id} href={`#${l.id}`} onClick={()=>setOpen(false)}
+          <a key={l.id} href={l.href}
+            onClick={(e) => {
+              setOpen(false);
+              if (l.href.startsWith('/')) {
+                e.preventDefault();
+                window.location.href = l.href;
+              }
+            }}
             style={{
               fontSize:28, fontWeight:300,
               fontFamily:"'Inter','Helvetica Neue',sans-serif",

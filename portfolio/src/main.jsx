@@ -1,7 +1,10 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './index.css'
 import App from './App.jsx'
+import BlogPage from './pages/BlogPage.jsx'
+import BlogPostPage from './pages/BlogPostPage.jsx'
 
 /* ── ZJ-style cursor: tiny dot + lagging ring ─── */
 const dot  = Object.assign(document.createElement('div'), { id:'cur-dot' });
@@ -51,5 +54,13 @@ document.addEventListener('mouseleave',()=>{ dot.style.opacity='0'; ring.style.o
 document.addEventListener('mouseenter',()=>{ dot.style.opacity='1'; ring.style.opacity='1'; });
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode><App /></StrictMode>
+  <StrictMode>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<App />} />
+        <Route path="/blog" element={<BlogPage />} />
+        <Route path="/blog/:id" element={<BlogPostPage />} />
+      </Routes>
+    </BrowserRouter>
+  </StrictMode>
 )

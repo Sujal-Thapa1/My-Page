@@ -75,7 +75,7 @@ export default function Contact() {
           {key.charAt(0).toUpperCase()+key.slice(1)}
         </label>
         <Tag
-          name={`from_${key}`}
+          name={key === "message" ? "message" : `from_${key}`}
           type={type || undefined}
           rows={rows || undefined}
           value={fields[key]}

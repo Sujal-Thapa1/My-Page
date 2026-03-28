@@ -86,7 +86,7 @@ export default function Hero() {
 
       {/* LINE 2 : "the" — mid, slightly transparent */}
       <div ref={line2Ref} className="hero-l2" style={{
-        position: "absolute", top: "47%", left: "10vw",
+        position: "absolute", top: "50%", left: "22vw",
         zIndex: 2, opacity: 0,
       }}>
         <span style={{

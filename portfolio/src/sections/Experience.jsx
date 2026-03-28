@@ -10,18 +10,6 @@ const experiences = [
     role: "Application Developer Intern",
     company: "EMEYC PVT. Ltd",
     desc: "Working as an Application Developer Intern at Emeyc Pvt. Ltd., I contribute to building and optimizing web applications, integrating APIs, and developing automation workflows. I focus on creating scalable solutions, improving system efficiency, and gaining hands-on experience in modern development tools and technologies.",
-  },
-  {
-    period: "2023 - 2024",
-    role: "Frontend Enthusiast",
-    company: "Self-Taught & Hackathons",
-    desc: "Explored advanced UI/UX patterns, mastered responsive design, and honed vanilla CSS/JS skills. Built several interactive prototypes focusing on sleek animations and optimal user journeys.",
-  },
-  {
-    period: "2022 - 2023",
-    role: "Foundations in Tech",
-    company: "University Academic Pursuits",
-    desc: "Focused on core computer science fundamentals, data structures, and algorithms. Started journey into web development with HTML, CSS, and basic JavaScript interactions.",
   }
 ];
 
