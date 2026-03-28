@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Sujal Thapa</title>
+    <script>
+      // GitHub Pages SPA redirect trick
+      // When GH Pages serves a 404 for /blog or /blog/1,
+      // this page saves the full path and redirects to the root.
+      // The root index.html then restores the path via history.replaceState.
+      var path = window.location.pathname;
+      var search = window.location.search;
+      var hash = window.location.hash;
+      // Store the full path in sessionStorage
+      sessionStorage.setItem('ghpages-redirect', path + search + hash);
+      // Redirect to root (preserves hash so GH Pages serves index.html)
+      window.location.replace('/' + window.location.search + window.location.hash);
+    </script>
+  </head>
+  <body></body>
+</html>
