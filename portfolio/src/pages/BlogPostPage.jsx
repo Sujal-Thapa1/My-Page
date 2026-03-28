@@ -302,8 +302,7 @@ export default function BlogPostPage() {
 
                 /* ── IMAGE ── */
                 if (block.type === "image") return (
-                  <figure key={i} style={{
-                    margin: "72px -60px",
+                  <figure key={i} className="blog-image-figure" style={{
                     padding: "0 0 24px",
                     position: "relative",
                   }}>
@@ -341,14 +340,14 @@ export default function BlogPostPage() {
                           padding: "48px 24px 20px",
                           display: "flex", alignItems: "flex-end", justifyContent: "space-between",
                         }}>
-                          <p style={{
+                          <p className="img-caption-text" style={{
                             color: "rgba(255,255,255,0.82)",
                             fontSize: 11, fontStyle: "italic",
                             letterSpacing: "0.03em", margin: 0, maxWidth: "70%",
                           }}>{block.caption}</p>
 
                           {/* image index badge */}
-                          <span style={{
+                          <span className="img-fig-badge" style={{
                             fontSize: 9, fontWeight: 700, letterSpacing: "0.12em",
                             textTransform: "uppercase",
                             color: post.categoryColor,
@@ -556,16 +555,24 @@ export default function BlogPostPage() {
       <Footer />
 
       <style>{`
+        /* ── Image figure bleed — responsive ── */
+        .blog-image-figure { margin: 72px -60px; }
         @media (max-width: 768px) {
           .post-header-grid { grid-template-columns: 1fr !important; gap: 1rem !important; }
           .related-grid { grid-template-columns: 1fr !important; }
           .post-body-grid { grid-template-columns: 1fr !important; }
           .post-body-grid > div:first-child { display: none !important; }
           .post-body-grid > div:last-child { display: none !important; }
+          /* image: no bleed on mobile, full-width flush */
+          .blog-image-figure { margin: 48px 0 !important; }
+          .img-caption-text { font-size: 10px !important; max-width: 65% !important; }
+          .img-fig-badge { font-size: 8px !important; padding: 3px 7px !important; }
         }
         @media (max-width: 1024px) and (min-width: 769px) {
           .related-grid { grid-template-columns: 1fr 1fr !important; }
           .post-body-grid { grid-template-columns: 0 1fr 0 !important; }
+          /* reduce bleed to 24px on tablet */
+          .blog-image-figure { margin: 60px -24px !important; }
         }
       `}</style>
     </div>
