@@ -143,7 +143,7 @@ export default function Hero() {
                 <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </a>
-            <a href="/sujal-cv.pdf" target="_blank" rel="noreferrer" style={{
+            <a href="/sujal-cv-v2.pdf" target="_blank" rel="noreferrer" style={{
               fontSize: 11, fontWeight: 500, letterSpacing: "0.08em",
               color: "rgba(20,30,80,0.5)", textDecoration: "none",
               transition: "color .2s",
