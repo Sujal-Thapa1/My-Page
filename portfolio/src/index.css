@@ -75,7 +75,8 @@ html.lenis { height: auto; }
   position: fixed;
   width: 5px; height: 5px;
   border-radius: 50%;
-  background: #1a1a2e;
+  background: #ffffff;
+  mix-blend-mode: difference;
   pointer-events: none;
   z-index: 9999;
   transform: translate(-50%,-50%);
@@ -85,7 +86,8 @@ html.lenis { height: auto; }
   position: fixed;
   width: 32px; height: 32px;
   border-radius: 50%;
-  border: 1.5px solid rgba(26,26,46,0.25);
+  border: 1.5px solid rgba(255, 255, 255, 0.8);
+  mix-blend-mode: difference;
   pointer-events: none;
   z-index: 9998;
   transform: translate(-50%,-50%);
@@ -95,12 +97,11 @@ html.lenis { height: auto; }
 }
 #cur-ring.big {
   width: 52px; height: 52px;
-  border-color: rgba(26,26,46,0.4);
-  background: rgba(118,152,220,0.06);
+  border-color: rgba(255, 255, 255, 1);
+  background: rgba(255, 255, 255, 0.2);
 }
 
-/* Dark section cursor override */
-.section-dark #cur-dot { background: rgba(255,255,255,0.9); }
+/* Obsolete dark section override removed. Cursor natively inverts color now! */
 
 /* ─── Scrollbar ─── */
 ::-webkit-scrollbar { width: 2px; }
@@ -137,7 +138,7 @@ html.lenis { height: auto; }
 
   /* Typography scale */
   h1 { font-size: clamp(3rem, 15vw, 4.5rem) !important; letter-spacing: -0.05em !important; }
-  h2 { font-size: clamp(2rem, 11vw, 3.5rem) !important; }
+  h2:not(.zj-footer-title) { font-size: clamp(2rem, 11vw, 3.5rem) !important; }
   h3 { font-size: 22px !important; }
   p { font-size: 14px !important; line-height: 1.6 !important; }
 

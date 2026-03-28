@@ -6,10 +6,10 @@ gsap.registerPlugin(ScrollTrigger);
 
 const experiences = [
   {
-    period: "2024 - Present",
-    role: "Full Stack Learner & Developer",
-    company: "Personal & Freelance Projects",
-    desc: "Architecting high-performance web applications using the MERN stack. Developing premium front-end experiences with React, GSAP, and Tailwind. Building robust backend APIs and integrating modern cloud solutions.",
+    period: "2026 - Present",
+    role: "Application Developer Intern",
+    company: "EMEYC PVT. Ltd",
+    desc: "Working as an Application Developer Intern at Emeyc Pvt. Ltd., I contribute to building and optimizing web applications, integrating APIs, and developing automation workflows. I focus on creating scalable solutions, improving system efficiency, and gaining hands-on experience in modern development tools and technologies.",
   },
   {
     period: "2023 - 2024",
@@ -44,7 +44,7 @@ export default function Experience() {
         }
       });
     }, sectionRef.current);
-    
+
     return () => ctx.revert();
   }, []);
 
@@ -140,8 +140,8 @@ export default function Experience() {
           ))}
         </div>
       </div>
-{/* Responsive tweaks */}
-<style>{`
+      {/* Responsive tweaks */}
+      <style>{`
   @media(max-width: 768px) {
     div[style*="gridTemplateColumns: 200px 1fr"] {
       grid-template-columns: 1fr !important;

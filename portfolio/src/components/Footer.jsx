@@ -22,7 +22,8 @@ export default function Footer() {
         { clipPath: "inset(0 0 100% 0)", y: 24, opacity: 0 },
         {
           clipPath: "inset(0 0 0% 0)", y: 0, opacity: 1, duration: 1.3, ease: "expo.out",
-          scrollTrigger: { trigger: bigRef.current, start: "top 90%", once: true }
+          scrollTrigger: { trigger: bigRef.current, start: "top bottom-=20", once: true },
+          clearProps: "clipPath"
         });
     }, secRef.current);
     return () => ctx.revert();
@@ -44,12 +45,14 @@ export default function Footer() {
       <div style={{ maxWidth: 1240, margin: "0 auto", padding: "0 40px" }}>
 
         {/* Giant name — ZJ footer logo style */}
-        <div ref={bigRef} style={{ marginBottom: 80, opacity: 0 }}>
-          <h2 style={{
-            fontSize: "clamp(4rem,11vw,10rem)",
+        <div ref={bigRef} style={{ marginBottom: 80 }}>
+          <h2 className="zj-footer-title" style={{
+            fontSize: "clamp(3.5rem, 14vw, 10rem)",
             fontWeight: 200, letterSpacing: "-0.05em", lineHeight: 0.9,
             color: "rgba(255,255,255,0.88)",
             margin: 0,
+            paddingTop: "0.15em",  // Expands bounding box so "S" doesn't get clipped
+            marginTop: "-0.15em",  // Counteracts padding so layout doesn't shift
           }}>
             Sujal<br />
             <span style={{ color: "rgba(118,152,220,0.7)" }}>Thapa</span>
@@ -130,7 +133,7 @@ export default function Footer() {
             © 2025 Sujal Thapa — All rights reserved
           </p>
           <p style={{ fontSize: 11, color: "rgba(255,255,255,0.28)", fontWeight: 400, letterSpacing: ".08em" }}>
-            Built with React · GSAP · Lenis
+            Built with ❤️ by Sujal Thapa
           </p>
         </div>
       </div>
