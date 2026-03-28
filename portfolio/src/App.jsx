@@ -239,7 +239,7 @@ export default function App() {
             }}
           />
         ) : (
-          <div id="experience" style={{ position: "relative", zIndex: 10, background: "#0f0f11", color: "#ffffff", borderRadius: "24px 24px 0 0", overflow: "hidden" }}>
+          <div id="experience" style={{ position: "relative", zIndex: 10, background: "#0f0f11", color: "#ffffff", borderRadius: "24px 24px 0 0", overflow: "hidden", pointerEvents: "auto" }}>
             <div ref={expWrapRef}><Experience /></div>
           </div>
         )}
@@ -263,7 +263,7 @@ export default function App() {
         {!isMobile ? (
           <div ref={spacerRef} style={{ height: footerHeight, background: "transparent", pointerEvents: "none" }} />
         ) : (
-          <div style={{ position: "relative", zIndex: 10, background: "#1a1a2e" }}>
+          <div style={{ position: "relative", zIndex: 10, background: "#1a1a2e", pointerEvents: "auto" }}>
             <div ref={footerWrapRef}><Footer /></div>
           </div>
         )}
