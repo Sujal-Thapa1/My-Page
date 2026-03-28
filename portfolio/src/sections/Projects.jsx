@@ -43,7 +43,7 @@ const ImageCard = ({ project }) => (
     overflow: "hidden",
     position: "relative",
     background: "#1a1a1e",
-  }}>
+  }} className="proj-slide-card">
     <img
       src={project.image}
       alt={project.title}
@@ -83,13 +83,13 @@ const TextCard = ({ project, onNext, isLast }) => (
     width: "clamp(260px,36vw,460px)",
     height: "clamp(320px,44vw,560px)",
     borderRadius: 20,
-    background: "#2a2828",   /* ZJ's warm dark taupe */
+    background: "#2a2828",
     padding: "32px 36px",
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
     position: "relative",
-  }}>
+  }} className="proj-slide-card proj-text-card">
     {/* Sector label */}
     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
       <div style={{
@@ -326,6 +326,7 @@ export default function Projects() {
           ref={emblaRef}
           data-cursor="drag"
           style={{ overflow: "hidden", paddingLeft: 40 }}
+          className="proj-embla-viewport"
         >
           <div style={{
             display: "flex",
@@ -362,8 +363,30 @@ export default function Projects() {
       </div>
 
       <style>{`
-        @media(max-width:768px){
+        @media(max-width:900px){
           .proj-header-grid{ grid-template-columns:1fr !important; gap:2rem !important; }
+        }
+        @media(max-width:640px){
+          /* Cards take ~82% of screen width so one fills view at a time */
+          .proj-slide-card {
+            width: 82vw !important;
+          }
+          /* Image card: fixed proportional height */
+          .proj-slide-card:not(.proj-text-card) {
+            height: 72vw !important;
+            min-height: 220px !important;
+            max-height: 320px !important;
+          }
+          /* Text card: let height grow to fit all content */
+          .proj-text-card {
+            height: auto !important;
+            min-height: 280px !important;
+            padding: 22px 20px !important;
+          }
+          /* Start cards flush to the edge on mobile */
+          .proj-embla-viewport {
+            padding-left: 16px !important;
+          }
         }
       `}</style>
     </section>
