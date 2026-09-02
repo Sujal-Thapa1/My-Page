@@ -5,6 +5,7 @@ import './index.css'
 import App from './App.jsx'
 import BlogPage from './pages/BlogPage.jsx'
 import BlogPostPage from './pages/BlogPostPage.jsx'
+import AchievementsPage from './pages/AchievementsPage.jsx'
 
 /* ── ZJ-style cursor: tiny dot + lagging ring ─── */
 const dot  = Object.assign(document.createElement('div'), { id:'cur-dot' });
@@ -60,6 +61,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/" element={<App />} />
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/blog/:id" element={<BlogPostPage />} />
+        <Route path="/achievements" element={<AchievementsPage />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>

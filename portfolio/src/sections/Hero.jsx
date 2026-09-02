@@ -150,7 +150,7 @@ export default function Hero() {
             }}
               onMouseEnter={e => (e.currentTarget.style.color = "rgba(20,30,80,0.9)")}
               onMouseLeave={e => (e.currentTarget.style.color = "rgba(20,30,80,0.5)")}>
-              Résumé ↗
+              My Résumé ↗
             </a>
           </div>
         </div>
